@@ -1,6 +1,9 @@
 # Duplicated_cleaner
+
 This is a collaborative lab assignment for CS205 in SUSTech
 
+ - Programming Language C (enough)
+ - Due: 14:00, July. 15
 
 ## Structure
 
@@ -9,10 +12,11 @@ This is a collaborative lab assignment for CS205 in SUSTech
      - Input dir
      - debug arg
      - verbose arg more infomation
+     - example ./cleaner mydir [-v] [-d]
  - file_enumerate.c enumerate all the files
      - recursion
      - duplicated files => stdout
-     - -d debug info = stderr
+     - -d debug info => stderr
      - -v current scanning dir; file details: size, type, hash => stderr
  - comparision.c compare two files
      - check file size
