@@ -7,7 +7,11 @@ SOURCES = $(wildcard $(SOURCEDIR)/*.cpp $(SOURCEDIR)/*.c)
 OBJECTS = $(patsubst $(SOURCEDIR)/%.c,$(BUILDDIR)/%.o,$(SOURCES))
 MKDIR_P = mkdir -p
 
-all: $(BUILDDIR) $(EXECUTABLE)
+all: $(BUILDDIR) $(EXECUTABLE) 
+
+.PHONY: debug
+debug:all
+	./build/cleaner -vd .
 
 $(EXECUTABLE):$(OBJECTS)
 	$(CC) $(CFLAGS)  -o $@ $^
@@ -21,8 +25,8 @@ $(BUILDDIR):
 
 .PHONY : clean
 clean : $(BUILDDIR)
-	find $(BUILDDIR) | xargs rm -f
-
+	find $(BUILDDIR) -name "*.o" | xargs rm -f
+	rm -f $(BUILDDIR)/cleaner
 .PHONY : test
 test:
 	@echo $(OBJECTS) -- $(SOURCES)
