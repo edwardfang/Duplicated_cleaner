@@ -11,7 +11,7 @@ all: $(BUILDDIR) $(EXECUTABLE)
 
 .PHONY: debug
 debug:all
-	./build/cleaner -vd .
+	./build/cleaner -vd ./build/
 
 $(EXECUTABLE):$(OBJECTS)
 	$(CC) $(CFLAGS)  -o $@ $^

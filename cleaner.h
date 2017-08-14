@@ -8,19 +8,26 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <stdarg.h>
 
 #endif
 
+#define MAX_MSG_LEN 1000
+
 extern int verbose_mod;
 extern int debug_mod;
+extern char* rootpath;
+extern int rootpathlen;
 
 int main(int argc, char* argv[]);
 
-extern int verbose_msg(const char* msg);
+extern int verbose_msg(const char * fmt, ...);
 
-extern int debug_msg(const char* msg);
+extern int debug_msg(const char * fmt, ...);
 
 extern int iterate_dir(char* dirpath);
+
+extern int compare(char * filepath);
 
 // no use
 typedef struct{

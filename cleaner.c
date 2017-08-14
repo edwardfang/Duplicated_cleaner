@@ -1,7 +1,7 @@
 #include "cleaner.h"
 
-verbose_mod = 0;
-debug_mod = 0;
+int verbose_mod = 0;
+int debug_mod = 0;
 
 int main(int argc, char* argv[]){
     /**
@@ -46,38 +46,58 @@ int main(int argc, char* argv[]){
         exit(EXIT_FAILURE);
     }
 
-    char* scanrootdir = argv[--optind];
+    // processing of the root path
+    char * rootpath = argv[--optind];
+    int rootpathlen = strlen(rootpath);
+    char ch;
+    while((ch = rootpath[rootpathlen-1])== '/'){
+        rootpath[rootpathlen-1] = 0;
+        rootpathlen--;
+    }
+    debug_msg(rootpath);
 
     // validate the directory
     DIR *dir;
-    if ((dir = opendir (scanrootdir)) == NULL) {
+    if ((dir = opendir (rootpath)) == NULL) {
         perror ("Cannot open the dir");
         closedir(dir);
         exit(EXIT_FAILURE);
     }
 
     // begin to find duplicated files
-    iterate_dir(scanrootdir);
+    iterate_dir(rootpath);
 
     return 0;
 
 }
 
-int verbose_msg(const char * msg){
+int verbose_msg(const char * fmt, ...){
     if(verbose_mod){
-        fputs(msg,stderr);
-        return 0;
+        int result;
+        va_list args;
+        va_start(args, fmt);
+        fputs("[INFO]", stderr);
+        result = vfprintf(stderr,fmt,args);
+        fputs("\n", stderr);
+        va_end(args);
+        return result; //retrun the length of string
     }else{
-        return 1;
+        return -1;
     }
     
 }
 
-int debug_msg(const char * msg){
+int debug_msg(const char * fmt, ...){
     if(debug_mod){
-        fputs(msg,stderr);
-        return 0;
+        int result;
+        va_list args;
+        va_start(args, fmt);
+        fputs("[DEBUG]", stderr);
+        result = vfprintf(stderr,fmt,args);
+        fputs("\n", stderr);
+        va_end(args);
+        return result; //retrun the length of string
     }else{
-        return 1;
+        return -1;
     }
 }
