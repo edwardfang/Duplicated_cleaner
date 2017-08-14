@@ -18,6 +18,7 @@ This is a collaborative lab assignment for CS205 in SUSTech
      - duplicated files => stdout
      - -d debug info => stderr
      - -v current scanning dir; file details: size, type, hash => stderr
+     - outo f memory detection
  - comparision.c compare two files
      - check file size
      - check first and last range of bytes (note the total size of file)
