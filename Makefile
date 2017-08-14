@@ -1,17 +1,18 @@
 CC=gcc
 CFLAGS=-Wall
-TARGET = $(BUILDDIR)/cleaner
+EXECUTABLE = $(BUILDDIR)/cleaner
 SOURCEDIR = .
 BUILDDIR = ./build
 SOURCES = $(wildcard $(SOURCEDIR)/*.cpp $(SOURCEDIR)/*.c)
 OBJECTS = $(patsubst $(SOURCEDIR)/%.c,$(BUILDDIR)/%.o,$(SOURCES))
 MKDIR_P = mkdir -p
 
+all: $(BUILDDIR) $(EXECUTABLE)
 
-$(TARGET):$(OBJECTS)
+$(EXECUTABLE):$(OBJECTS)
 	$(CC) $(CFLAGS)  -o $@ $^
 
-$(OBJECTS): $(BUILDDIR)/%.o : $(BUILDDIR) $(SOURCEDIR)/%.c
+$(OBJECTS): $(BUILDDIR)/%.o : $(SOURCEDIR)/%.c
 	$(CC) $(CFLAGS)  -o $@ -c $^
 
 .PHONY: $BUILDDIR
@@ -20,7 +21,7 @@ $(BUILDDIR):
 
 .PHONY : clean
 clean : $(BUILDDIR)
-	find $(BUILDDIR) -name "*.o"  | xargs rm -f
+	find $(BUILDDIR) | xargs rm -f
 
 .PHONY : test
 test:

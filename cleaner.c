@@ -39,6 +39,35 @@ int main(int argc, char* argv[]){
         exit(EXIT_FAILURE);
     }
 
+    char* scanrootdir = argv[optind];
+
+    // validate the directory
+    DIR *dir;
+    if ((dir = opendir (scanrootdir)) == NULL) {
+        perror ("Cannot open the dir");
+        exit(EXIT_FAILURE);
+    }
+
+
     return 0;
 
+}
+
+int verbose_msg(const char * msg){
+    if(verbose_mod){
+        fputs(msg,stderr);
+        return 0;
+    }else{
+        return 1;
+    }
+    
+}
+
+int debug_msg(const char * msg){
+    if(debug_mod){
+        fputs(msg,stderr);
+        return 0;
+    }else{
+        return 1;
+    }
 }

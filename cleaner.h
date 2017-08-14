@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <dirent.h>
 
 #endif
 
@@ -13,6 +14,6 @@ static int debug_mod = 0;
 
 int main(int argc, char* argv[]);
 
-extern int verbose_msg(char* msg);
+extern int verbose_msg(const char* msg);
 
-extern int debug_msg(char* msg);
+extern int debug_msg(const char* msg);

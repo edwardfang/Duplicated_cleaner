@@ -13,7 +13,7 @@ This is a collaborative lab assignment for CS205 in SUSTech
      - debug arg
      - verbose arg more infomation
      - example ./cleaner mydir [-v] [-d]
- - file_enumerate.c enumerate all the files
+ - file_tranverse.c tranverse all the files in the directory
      - recursion
      - duplicated files => stdout
      - -d debug info => stderr
