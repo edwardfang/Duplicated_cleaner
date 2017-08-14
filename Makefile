@@ -9,9 +9,13 @@ MKDIR_P = mkdir -p
 
 all: $(BUILDDIR) $(EXECUTABLE) 
 
+.PHONY: debugvd
+debugvd:all
+	./build/cleaner -vd ./build/
+
 .PHONY: debug
 debug:all
-	./build/cleaner -vd ./build/
+	./build/cleaner ./build/
 
 $(EXECUTABLE):$(OBJECTS)
 	$(CC) $(CFLAGS)  -o $@ $^
