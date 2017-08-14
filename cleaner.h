@@ -27,7 +27,7 @@ extern int debug_msg(const char * fmt, ...);
 
 extern int iterate_dir(char* dirpath);
 
-extern int compare(char * filepath);
+extern int compare(const char * filepath);
 
 // no use
 typedef struct{
@@ -35,3 +35,7 @@ typedef struct{
     size_t filesize;
     
 }file_fingerprint;
+
+struct filenode {
+
+}

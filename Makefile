@@ -18,7 +18,7 @@ debug:all
 	./build/cleaner ./build/
 
 $(EXECUTABLE):$(OBJECTS)
-	$(CC) $(CFLAGS)  -o $@ $^
+	$(CC) $(CFLAGS)  -o $@ $^ -static-libgcc
 
 $(OBJECTS): $(BUILDDIR)/%.o : $(SOURCEDIR)/%.c
 	$(CC) $(CFLAGS)  -o $@ -c $^

@@ -32,6 +32,9 @@ int iterate_dir(char *dirpath)
         else //如果读取的d_type类型不是 DT_DIR, 即读取的不是目录，而是文件，则直接输出 d_name, 即输出文件名
         {
             verbose_msg("Comparing File: %s/%s",childpath, ent->d_name);
+            char *filepath = malloc(sizeof(char)*(strlen(childpath)+strlen(ent->d_name)+1));
+            sprintf(filepath, "%s/%s", dirpath, ent->d_name); 
+            compare(filepath);
         }
     }
     closedir(pDir);

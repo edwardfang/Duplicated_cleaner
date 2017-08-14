@@ -3,63 +3,69 @@
 int verbose_mod = 0;
 int debug_mod = 0;
 
-int main(int argc, char* argv[]){
+int main(int argc, char *argv[])
+{
     /**
     ** main entry
     **/
 
     // the information to display when options goes wrong
-    char * usage = "Usage: %s dirname [-v] [-d]\n"
-    "where\n"
-    "\t -v is used to displays more information about what the program is doing\n"
-    "\t -d is used to displays the information for debugging\n";
+    char *usage = "Usage: %s dirname [-v] [-d]\n"
+                  "where\n"
+                  "\t -v is used to displays more information about what the program is doing\n"
+                  "\t -d is used to displays the information for debugging\n";
 
     // get option info
-    int opt, argnum = 0; // argv[0], thus default 1
-    while (optind < argc) {
-        if ((opt = getopt(argc, argv, "vd")) != -1)
+    int opt; // argv[0], thus default 1
+    while ((opt = getopt(argc, argv, "vd")) != -1)
+    {
+        switch (opt)
         {
-            switch (opt)
-            {
-            case 'v':
-                verbose_mod = 1;
-                break;
-            case 'd':
-                debug_mod = 1;
-                break;
-            default: /* '?' */
-                fprintf(stderr, "Invalid option exists.\n");
-                fprintf(stderr, usage,	argv[0]);
-                exit(EXIT_FAILURE);
-            }
-        }else{
-            //debug_msg("one more arg.\n");
-            argnum ++;
-            optind ++;
+        case 'v':
+            verbose_mod = 1;
+            break;
+        case 'd':
+            debug_mod = 1;
+            break;
+        default: /* '?' */
+            fprintf(stderr, "Invalid option exists.\n");
+            fprintf(stderr, usage, argv[0]);
+            exit(EXIT_FAILURE);
         }
     }
     //fprintf(stderr,"%d num\n", argnum);
-    // check argument nums
-    if(argnum>1){
+    // check argument nums and position
+    debug_msg("optind = %d, argc = %d", optind, argc);
+    if (optind >= argc)
+    {
+        fprintf(stderr, "Expected argument after options.\n");
+        fprintf(stderr, usage, argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    if (argc!=optind+1)
+    {
         fprintf(stderr, "You must specify one and only one directory for scanning!\n");
-        fprintf(stderr, usage,	argv[0]);
+        fprintf(stderr, usage, argv[0]);
         exit(EXIT_FAILURE);
     }
 
     // processing of the root path
-    char * rootpath = argv[--optind];
+    char * rootpath = argv[optind];
     int rootpathlen = strlen(rootpath);
     char ch;
-    while((ch = rootpath[rootpathlen-1])== '/'){
-        rootpath[rootpathlen-1] = 0;
+    while ((ch = rootpath[rootpathlen - 1]) == '/')
+    {
+        rootpath[rootpathlen - 1] = 0;
         rootpathlen--;
     }
-    debug_msg(rootpath);
+    debug_msg("Root Path is %s", rootpath);
 
     // validate the directory
     DIR *dir;
-    if ((dir = opendir (rootpath)) == NULL) {
-        perror ("Cannot open the dir");
+    if ((dir = opendir(rootpath)) == NULL)
+    {
+        perror("Cannot open the dir");
         closedir(dir);
         exit(EXIT_FAILURE);
     }
@@ -68,36 +74,42 @@ int main(int argc, char* argv[]){
     iterate_dir(rootpath);
 
     return 0;
-
 }
 
-int verbose_msg(const char * fmt, ...){
-    if(verbose_mod){
+int verbose_msg(const char *fmt, ...)
+{
+    if (verbose_mod)
+    {
         int result;
         va_list args;
         va_start(args, fmt);
         fputs("[INFO]", stderr);
-        result = vfprintf(stderr,fmt,args);
+        result = vfprintf(stderr, fmt, args);
         fputs("\n", stderr);
         va_end(args);
         return result; //retrun the length of string
-    }else{
+    }
+    else
+    {
         return -1;
     }
-    
 }
 
-int debug_msg(const char * fmt, ...){
-    if(debug_mod){
+int debug_msg(const char *fmt, ...)
+{
+    if (debug_mod)
+    {
         int result;
         va_list args;
         va_start(args, fmt);
         fputs("[DEBUG]", stderr);
-        result = vfprintf(stderr,fmt,args);
+        result = vfprintf(stderr, fmt, args);
         fputs("\n", stderr);
         va_end(args);
         return result; //retrun the length of string
-    }else{
+    }
+    else
+    {
         return -1;
     }
 }
