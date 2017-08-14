@@ -29,13 +29,15 @@ extern int iterate_dir(char* dirpath);
 
 extern int compare(const char * filepath);
 
-// no use
-typedef struct{
-    char* filename;
-    size_t filesize;
-    
-}file_fingerprint;
+unsigned char* getMD5(const char *filepath);
 
-struct filenode {
+// filefingerprint
+// typedef struct{
+//     char* filename;
+//     off_t st_size;
+//     mode_t st_mode;
+// } file_fingerprint;
 
-}
+// struct filenode {
+//     //struct
+// };

@@ -1,5 +1,6 @@
 CC=gcc
 CFLAGS=-Wall
+LIBS=-lcrypto -lssl
 EXECUTABLE = $(BUILDDIR)/cleaner
 SOURCEDIR = .
 BUILDDIR = ./build
@@ -13,12 +14,16 @@ all: $(BUILDDIR) $(EXECUTABLE)
 debugvd:all
 	./build/cleaner -vd ./build/
 
+.PHONY: debugpd
+debugpd:all
+	./build/cleaner -vd ./testfile
+
 .PHONY: debug
 debug:all
 	./build/cleaner ./build/
 
 $(EXECUTABLE):$(OBJECTS)
-	$(CC) $(CFLAGS)  -o $@ $^ -static-libgcc
+	$(CC) $(CFLAGS)  -o $@ $^ $(LIBS)
 
 $(OBJECTS): $(BUILDDIR)/%.o : $(SOURCEDIR)/%.c
 	$(CC) $(CFLAGS)  -o $@ -c $^
