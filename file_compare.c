@@ -1,6 +1,7 @@
 #include "cleaner.h"
 #include <openssl/md5.h>
 #include <fcntl.h> //file control options
+#include <search.h>
 
 #define MD5_DIGEST_LENGTH  16
 
@@ -32,6 +33,12 @@ int compare(const char *filepath)
     file_fingerprint* ffp;
     ffp = ffpnew(subpath, buffer.st_size, buffer.st_mode);
     debug_msg("Siza: %d, type: %d,  status=%d", (int)ffp->filesize, (int)ffp->filetype, status);
+    // !!! not finished yet
+    if(tsearch(ffp,tree_root,&ffp_compare)!=NULL){
+        debug_msg("Tsearch not null");
+    }
+    // test block comparision
+    //compare_file_blocks("./build/cleaner.o", "./build/file_iterator.o");
     // test MD5
     //unsigned char * md5 = getMD5(filepath);
     //free(md5);
@@ -56,10 +63,15 @@ int check_privilege(const char* filepath){
 
 // the third comparision
 int compare_file_blocks(file_fingerprint* file1,file_fingerprint file2 ){
-    off_t file_size = file1->filesize;
+    unsigned int file_size = (unsigned int) file1->filesize;
+    debug_msg("file size: %u", file_size);
+    FILE* fd[2];
     if(file_size>MIN_BLOCK_COMPARE_SIZE){
         return 0;
     }else{
+        char * tmp1 = (char *)malloc(sizeof(char)* file_size);
+        char * tmp2 = (char *)malloc(sizeof(char)* file_size);
+        //fread(tmp1,(size_t) file_size,)
         return 0;
     }
 

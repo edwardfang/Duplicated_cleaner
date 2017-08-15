@@ -3,6 +3,8 @@
 int verbose_mod = 0;
 int debug_mod = 0;
 int rootpathlen;
+file_fingerprint* treeroot = NULL;
+
 int main(int argc, char *argv[])
 {
     /**
