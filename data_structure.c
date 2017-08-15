@@ -1,32 +1,29 @@
 #include "cleaner.h"
 
-file_fingerprint* ffpnew(char* subpath,off_t filesize, mode_t filetype){
+file_fingerprint* ffpnew(const char* filepath,off_t filesize, mode_t filetype){
     file_fingerprint* ffp = (file_fingerprint *)malloc(sizeof(file_fingerprint));
-    ffp->subpath = subpath;
+    ffp->filepath = filepath;
     ffp->filetype = filetype;
     ffp->filesize = filesize;
     return ffp;
 }
 
 void ffpfree(file_fingerprint* ffp){
-    free(ffp->subpath);
+    free((char *)ffp->filepath);
     if(ffp->md5){
         free(ffp->md5);
     }
 }
 
-int ffp_compare (const void* fp1, const void* fp2){
-    // printf("cmp\n");
-    file_fingerprint * ffp1 = (file_fingerprint*)fp1;
-    file_fingerprint * ffp2 = (file_fingerprint*)fp2;
-    if(ffp1->filesize>ffp2->filesize){
-        // printf("cmp\n");
+// compar points to a comparison routine, which takes pointers to two items.
+int ffp_compare (const void* ffp1, const void* ffp2){
+    file_fingerprint* fp1 = (file_fingerprint *) ffp1;
+    file_fingerprint* fp2 = (file_fingerprint *) ffp2;
+    if (fp1->filesize>fp2->filesize){
         return 1;
-    }else if(ffp1->filesize<ffp2->filesize){
-        // printf("cmp\n");
+    }else if(fp1->filesize<fp2->filesize){
         return -1;
     }else{
-        // printf("cmp\n");
         return 0;
     }
 }

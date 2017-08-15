@@ -11,10 +11,8 @@
 #include <stdarg.h>
 #include <errno.h>
 
-#endif
-
-#define MIN_BLOCK_COMPARE_SIZE 150 
-#define BLOCK_SIZE 50
+#define MIN_BLOCK_COMPARE_SIZE 500 
+#define BLOCK_SIZE 100
 
 extern int verbose_mod;
 extern int debug_mod;
@@ -22,14 +20,12 @@ extern char* rootpath;
 extern int rootpathlen;
 
 typedef struct{
-    char* subpath;
+    const char* filepath;
     off_t filesize;
     mode_t filetype;
     unsigned char * md5;
 } file_fingerprint;
 extern void* tree_root;
-
-
 
 
 int main(int argc, char* argv[]);
@@ -48,8 +44,10 @@ int  check_privilege(const char* filepath);
 
 int compare_file_blocks(file_fingerprint* file1,file_fingerprint *file2 );
 
-file_fingerprint* ffpnew(char* subpath,off_t filesize, mode_t filetype);
+file_fingerprint* ffpnew(const char* filepath,off_t filesize, mode_t filetype);
 
 void ffpfree(file_fingerprint* ffp);
 
-int ffp_compare (const void* fp1, const void* fp2);
+int ffp_compare (const void* ffp1, const void* ffp2);   
+
+#endif
