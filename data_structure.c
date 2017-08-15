@@ -15,7 +15,7 @@ void ffpfree(file_fingerprint* ffp){
     }
 }
 
-int ffp_compare (file_fingerprint* ffp1, file_fingerprint* ffp2){
+int ffp_compare (const file_fingerprint* ffp1, const file_fingerprint* ffp2){
     if(ffp1->filesize>ffp2->filesize){
         return 1;
     }else if(ffp1->filesize<ffp2->filesize){

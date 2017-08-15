@@ -1,8 +1,10 @@
 #include "cleaner.h"
+#include "time.h"
 
 int verbose_mod = 0;
 int debug_mod = 0;
 int rootpathlen;
+char* rootpath;
 file_fingerprint* treeroot = NULL;
 
 int main(int argc, char *argv[])
@@ -53,7 +55,7 @@ int main(int argc, char *argv[])
     }
 
     // processing of the root path
-    char * rootpath = (char *) malloc(sizeof(char)*(strlen(argv[optind])+2));
+    rootpath = (char *) malloc(sizeof(char)*(strlen(argv[optind])+2));
     strcpy(rootpath, argv[optind]);
     rootpathlen = strlen(rootpath);
     char ch;
@@ -80,6 +82,8 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
+    srand(time(NULL));
+
     // begin to find duplicated files
     iterate_dir(rootpath);
 
@@ -96,7 +100,7 @@ int verbose_msg(const char *fmt, ...)
         int result;
         va_list args;
         va_start(args, fmt);
-        fputs("[INFO]", stderr);
+        fputs("[INFO] ", stderr);
         result = vfprintf(stderr, fmt, args);
         fputs("\n", stderr);
         va_end(args);
@@ -115,7 +119,7 @@ int debug_msg(const char *fmt, ...)
         int result;
         va_list args;
         va_start(args, fmt);
-        fputs("[DEBUG]", stderr);
+        fputs("[DEBUG] ", stderr);
         result = vfprintf(stderr, fmt, args);
         fputs("\n", stderr);
         va_end(args);

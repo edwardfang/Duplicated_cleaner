@@ -27,7 +27,7 @@ typedef struct{
     mode_t filetype;
     unsigned char * md5;
 } file_fingerprint;
-file_fingerprint* tree_root;
+extern file_fingerprint* tree_root;
 
 
 
@@ -46,10 +46,10 @@ unsigned char* getMD5(const char *filepath);
 
 int  check_privilege(const char* filepath);
 
-int compare_file_blocks(file_fingerprint* file1,file_fingerprint file2 );
+int compare_file_blocks(file_fingerprint* file1,file_fingerprint *file2 );
 
 file_fingerprint* ffpnew(char* subpath,off_t filesize, mode_t filetype);
 
 void ffpfree(file_fingerprint* ffp);
 
-int ffp_compare (file_fingerprint* ffp1, file_fingerprint* ffp2);
+int ffp_compare (const file_fingerprint* ffp1, const file_fingerprint* ffp2);
