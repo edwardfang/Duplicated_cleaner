@@ -8,7 +8,7 @@ This is a collaborative lab assignment for CS205 in SUSTech
 ## How to run it
 
  - First run `make`
- - Then just run `build/cleaner dir [-v] [-d]`
+ - Then just run `./build/cleaner dir [-v] [-d]`
 
 ## Structure
 
