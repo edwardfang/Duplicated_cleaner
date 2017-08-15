@@ -5,8 +5,7 @@ int iterate_dir(char *dirpath)
 {
     DIR *pDir;          //定义一个DIR类的指针
     struct dirent *ent; 
-    //int i = 0;
-    char childpath[512]; //定义一个字符数组，用来存放读取的路径
+    char childpath[512]; // this should be dynamically aloocated
     verbose_msg("Scanning DIR: %s",dirpath);
     pDir = opendir(dirpath);                    //  opendir方法打开path目录，并将地址付给pDir指针
     memset(childpath, 0, sizeof(childpath)); //将字符数组childpath的数组元素全部置零
@@ -25,16 +24,16 @@ int iterate_dir(char *dirpath)
                 //如果读取的d_name为 . 或者.. 表示读取的是当前目录符和上一目录符, 用contiue跳过，不进行下面的输出
                 continue;
 
-            sprintf(childpath, "%s/%s", dirpath, ent->d_name); //如果非. ..则将 路径 和 文件名d_name 付给childpath, 并在下一行prinf输出
+            sprintf(childpath, "%s%s/", dirpath, ent->d_name); //如果非. ..则将 路径 和 文件名d_name 付给childpath, 并在下一行prinf输出
             verbose_msg("New Path: %s", childpath);
             iterate_dir(childpath); // recursion
         }
         else //如果读取的d_type类型不是 DT_DIR, 即读取的不是目录，而是文件，则直接输出 d_name, 即输出文件名
         {
-            verbose_msg("Comparing File: %s/%s",childpath, ent->d_name);
-            char *filepath = malloc(sizeof(char)*(strlen(childpath)+strlen(ent->d_name)+1));
-            sprintf(filepath, "%s/%s", dirpath, ent->d_name); 
+            char *filepath = malloc(sizeof(char)*(strlen(dirpath)+strlen(ent->d_name)+2));
+            sprintf(filepath, "%s%s", dirpath, ent->d_name); 
             compare(filepath);
+            free(filepath);
         }
     }
     closedir(pDir);

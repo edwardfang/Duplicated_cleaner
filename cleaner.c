@@ -2,7 +2,7 @@
 
 int verbose_mod = 0;
 int debug_mod = 0;
-
+int rootpathlen;
 int main(int argc, char *argv[])
 {
     /**
@@ -51,14 +51,22 @@ int main(int argc, char *argv[])
     }
 
     // processing of the root path
-    char * rootpath = argv[optind];
-    int rootpathlen = strlen(rootpath);
+    char * rootpath = (char *) malloc(sizeof(char)*(strlen(argv[optind])+2));
+    strcpy(rootpath, argv[optind]);
+    rootpathlen = strlen(rootpath);
     char ch;
-    while ((ch = rootpath[rootpathlen - 1]) == '/')
-    {
-        rootpath[rootpathlen - 1] = 0;
-        rootpathlen--;
+    if((ch = rootpath[rootpathlen - 1]) == '/'){
+        while ((ch = rootpath[rootpathlen - 2]) == '/')
+        {
+            rootpath[rootpathlen - 1] = 0;
+            rootpathlen--;
+        }
+    }else{
+        debug_msg("Add '/' to root_path");
+        rootpath[rootpathlen++] = '/';
+        rootpath[rootpathlen] = 0;
     }
+
     debug_msg("Root Path is %s", rootpath);
 
     // validate the directory
@@ -72,6 +80,9 @@ int main(int argc, char *argv[])
 
     // begin to find duplicated files
     iterate_dir(rootpath);
+
+    // free memory
+    free(rootpath);
 
     return 0;
 }

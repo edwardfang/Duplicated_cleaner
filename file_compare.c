@@ -2,29 +2,50 @@
 #include <openssl/md5.h>
 #include <fcntl.h> //file control options
 
+#define MD5_DIGEST_LENGTH  16
+
+
+char* pathtrim(const char* filepath){
+    char * subpath = (char *) malloc(sizeof(char)*(strlen(filepath)-rootpathlen)); // rootpath + subpath + '\0'
+    strcpy(subpath, filepath+rootpathlen);
+    debug_msg("Relative Path: %s",subpath);
+    return subpath;
+}
+
 
 int compare(const char *filepath)
 {
+    char * subpath = pathtrim(filepath);
+    verbose_msg("Comparing File: %s",filepath);
     if(check_privilege(filepath)){
-        verbose_msg("Ignore file: filename due to privilege limitation: %s", strerror(errno));
-        //return -1;
+        verbose_msg("Ignore file: %s due to privilege limitation: %s",subpath, strerror(errno));
+        return -1;
     }
+    debug_msg("Successfully access.");
     struct stat buffer;
     int status;
     status = lstat(filepath, &buffer);
     debug_msg("Siza: %d, status=%d", (int)buffer.st_size, status);
+    if(status!=0){
+        verbose_msg("Fetch file status failed: $s: %s, Error code: %d",subpath, strerror(errno),errno);
+    }
+    pathtrim(filepath);
     // test MD5
-    getMD5(filepath);
+    //unsigned char * md5 = getMD5(filepath);
+    //free(md5);
     // maintain the info in a binary tree
     return 0;
 }
 
 // ignore the files that can not be read; test privilege
 int check_privilege(const char* filepath){
+    debug_msg("Checking privilege.");
     FILE* fd;
     if((fd = fopen(filepath, "rb"))==NULL){
+        //debug_msg("Return 1 Checking privilege.");        
         return 1;
     }else{
+        //debug_msg("Return 0 Checking privilege.");
         fclose(fd);
         return 0;
     }
@@ -50,19 +71,19 @@ unsigned char *getMD5(const char *filepath)
     MD5_CTX c;
     char buf[512];
     ssize_t bytes;
-    unsigned char *out = (unsigned char *)malloc(sizeof(char) * MD5_DIGEST_LENGTH);
+    unsigned char *out = (unsigned char *)malloc(sizeof(char) * (MD5_DIGEST_LENGTH+1));
 
     MD5_Init(&c);
-    debug_msg("MD5_Init");
+    //debug_msg("MD5_Init");
     int fd; // FILE* fd;
     fd = open(filepath, O_RDONLY); // or fd = fopen(filepath, "rb"); 
     bytes = read(fd, buf, 512);
-    debug_msg("MD5_read");
+    //debug_msg("MD5_read");
     while (bytes > 0)
     {
 
         MD5_Update(&c, buf, bytes);
-        debug_msg("MD5_update");
+        //debug_msg("MD5_update");
         bytes = read(fd, buf, 512);
     }
 
