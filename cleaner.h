@@ -10,6 +10,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <errno.h>
+#include <search.h>
 
 #define MIN_BLOCK_COMPARE_SIZE 500 
 #define BLOCK_SIZE 100
@@ -22,7 +23,7 @@ extern int rootpathlen;
 typedef struct{
     const char* filepath;
     off_t filesize;
-    mode_t filetype;
+    unsigned int filetype;
     unsigned char * md5;
 } file_fingerprint;
 extern void* tree_root;

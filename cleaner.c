@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
 
     // free memory
     free(rootpath);
+    tdestroy(tree_root,ffpfree);
 
     return 0;
 }

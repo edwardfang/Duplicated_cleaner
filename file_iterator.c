@@ -33,7 +33,7 @@ int iterate_dir(char *dirpath)
             char *filepath = malloc(sizeof(char)*(strlen(dirpath)+strlen(ent->d_name)+2));
             sprintf(filepath, "%s%s", dirpath, ent->d_name); 
             compare(filepath);
-            free(filepath);
+            // free(filepath);
         }
     }
     closedir(pDir);

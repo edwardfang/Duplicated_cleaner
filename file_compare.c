@@ -1,7 +1,7 @@
 #include "cleaner.h"
 #include <openssl/md5.h>
 #include <fcntl.h> //file control options
-#include <search.h>
+
 
 #define MD5_DIGEST_LENGTH 16
 
@@ -37,21 +37,23 @@ int compare(const char *filepath)
     }
     // store the file info into the node
     file_fingerprint *ffp;
-    ffp = ffpnew(filepath, buffer.st_size, buffer.st_mode);
-    // debug_msg("Size: %d, type: %d,  status=%d", (int)ffp->filesize, (int)ffp->filetype, status);
+    // extract the file type code from a mode value.
+    ffp = ffpnew(filepath, buffer.st_size, (unsigned int)buffer.st_mode & S_IFMT);
+    debug_msg("Size: %d, type: %u,  status=%d", (int)ffp->filesize, ffp->filetype, status);
     // reference man page: http://man7.org/linux/man-pages/man3/tsearch.3.html
     // key points to the item to be searched for. rootp points to a variable which points to the root of the tree.
-    file_fingerprint **fin = (file_fingerprint **)tsearch((void *)ffp, &tree_root, ffp_compare);
+    file_fingerprint ** ffpp = (file_fingerprint **)tsearch((void *)ffp, &tree_root, ffp_compare);
     // returns a pointer to the newly added item.
-    if (fin == NULL)
+    if (ffpp == NULL)
     {
         debug_msg("Append child failed");
         exit(1);
     }
     else
     {
+        file_fingerprint * result_ffp = * ffpp;
         //fin = (file_fingerprint*)((uintptr_t)fin-32);
-        debug_msg("Fin Size: %d, type: %d path: %s", (*fin)->filesize, (*fin)->filetype, (*fin)->filepath);
+        debug_msg("Fin Size: %d, type: %d path: %s", result_ffp->filesize, result_ffp->filetype, result_ffp->filepath);
         // if(fin == ffp) {
         //     //Not found
         //     debug_msg("Same file not found currently");
@@ -116,7 +118,8 @@ int compare_file_blocks(file_fingerprint *file1, file_fingerprint *file2)
 {
     unsigned int file_size = (unsigned int)file1->filesize;
     char *subpath[2];
-    if(verbose_mod){
+    if (verbose_mod)
+    {
         subpath[0] = pathtrim(file1->filepath);
         subpath[1] = pathtrim(file2->filepath);
         verbose_msg("Block Checking: File name: %s\t%s", subpath[0], subpath[1]);

@@ -1,6 +1,6 @@
 #include "cleaner.h"
 
-file_fingerprint* ffpnew(const char* filepath,off_t filesize, mode_t filetype){
+file_fingerprint* ffpnew(const char* filepath,off_t filesize, unsigned int filetype){
     file_fingerprint* ffp = (file_fingerprint *)malloc(sizeof(file_fingerprint));
     ffp->filepath = filepath;
     ffp->filetype = filetype;
@@ -24,7 +24,13 @@ int ffp_compare (const void* ffp1, const void* ffp2){
     }else if(fp1->filesize<fp2->filesize){
         return -1;
     }else{
-        return 0;
+        if(fp1->filetype>fp2->filetype){
+            return 1;
+        }else if(fp1->filetype<fp2->filetype){
+            return -1;
+        }else{
+            return 0;
+        }
     }
 }
 
