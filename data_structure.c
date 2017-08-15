@@ -15,12 +15,18 @@ void ffpfree(file_fingerprint* ffp){
     }
 }
 
-int ffp_compare (const file_fingerprint* ffp1, const file_fingerprint* ffp2){
+int ffp_compare (const void* fp1, const void* fp2){
+    // printf("cmp\n");
+    file_fingerprint * ffp1 = (file_fingerprint*)fp1;
+    file_fingerprint * ffp2 = (file_fingerprint*)fp2;
     if(ffp1->filesize>ffp2->filesize){
+        // printf("cmp\n");
         return 1;
     }else if(ffp1->filesize<ffp2->filesize){
+        // printf("cmp\n");
         return -1;
     }else{
+        // printf("cmp\n");
         return 0;
     }
 }

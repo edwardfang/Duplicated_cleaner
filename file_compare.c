@@ -7,7 +7,7 @@
 
 typedef unsigned char uchar;
 
-file_fingerprint* tree_root = NULL;
+void* tree_root = NULL;
 
 char* pathtrim(const char* filepath){
     char * subpath = (char *) malloc(sizeof(char)*(strlen(filepath)-rootpathlen)); // rootpath + subpath + '\0'
@@ -37,13 +37,16 @@ int compare(const char *filepath)
     ffp = ffpnew(subpath, buffer.st_size, buffer.st_mode);
     debug_msg("Size: %d, type: %d,  status=%d", (int)ffp->filesize, (int)ffp->filetype, status);
     // !!! not finished yet
-    file_fingerprint *fin;
-    if((fin = (file_fingerprint*)tsearch((void*)ffp,(void**)&tree_root,ffp_compare))==NULL){
+    printf("tree_root: %d\n", tree_root);
+    file_fingerprint *fin = (file_fingerprint*)tsearch((void*)ffp,&tree_root,ffp_compare);
+    if(fin == NULL){
         debug_msg("Append child failed");
         exit(1);
     } else {
         //fin = (file_fingerprint*)((uintptr_t)fin-32);
-        printf("%d %d %d\n", ffp, fin, (uintptr_t)fin - (uintptr_t)ffp);
+        printf("tree_root: %d\n", tree_root);
+        memcpy(fin, ffp, sizeof(file_fingerprint));
+        printf("ffp:%d fin:%d off:%d\n", ffp, fin, (uintptr_t)fin - (uintptr_t)ffp);
         debug_msg("Fin Size: %d, type: %d path: %s", fin->filesize, fin->filetype, fin->subpath);
         if(fin == ffp) {
             //Not found
