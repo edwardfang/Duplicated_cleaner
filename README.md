@@ -5,6 +5,11 @@ This is a collaborative lab assignment for CS205 in SUSTech
  - Programming Language C (enough)
  - Due: 14:00, July. 15
 
+## How to run it
+
+First run `make`
+Then just run `build/cleaner dir [-v] [-d]`
+
 ## Structure
 
  - dufinder.c deal with input arguments
