@@ -17,6 +17,7 @@ int compare(const char *filepath)
 {
     char * subpath = pathtrim(filepath);
     verbose_msg("Comparing File: %s",filepath);
+    // ignore if no read permission
     if(check_privilege(filepath)){
         verbose_msg("Ignore file: %s due to privilege limitation: %s",subpath, strerror(errno));
         return -1;
@@ -25,11 +26,12 @@ int compare(const char *filepath)
     struct stat buffer;
     int status;
     status = lstat(filepath, &buffer);
-    debug_msg("Siza: %d, status=%d", (int)buffer.st_size, status);
     if(status!=0){
         verbose_msg("Fetch file status failed: $s: %s, Error code: %d",subpath, strerror(errno),errno);
     }
-    pathtrim(filepath);
+    file_fingerprint* ffp;
+    ffp = ffpnew(subpath, buffer.st_size, buffer.st_mode);
+    debug_msg("Siza: %d, type: %d,  status=%d", (int)ffp->filesize, (int)ffp->filetype, status);
     // test MD5
     //unsigned char * md5 = getMD5(filepath);
     //free(md5);

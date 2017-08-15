@@ -22,9 +22,9 @@ extern char* rootpath;
 extern int rootpathlen;
 
 typedef struct{
-    char* filename;
+    char* subpath;
     off_t filesize;
-    mode_t st_mode;
+    mode_t filetype;
     unsigned char * md5;
 } file_fingerprint;
 
@@ -44,6 +44,6 @@ unsigned char* getMD5(const char *filepath);
 
 int  check_privilege(const char* filepath);
 
-// struct filenode {
-//     //struct
-// };
+file_fingerprint* ffpnew(char* subpath,off_t filesize, mode_t filetype);
+
+void ffpfree(file_fingerprint* ffp);
