@@ -8,6 +8,12 @@ SOURCES = $(wildcard $(SOURCEDIR)/*.cpp $(SOURCEDIR)/*.c)
 OBJECTS = $(patsubst $(SOURCEDIR)/%.c,$(BUILDDIR)/%.o,$(SOURCES))
 MKDIR_P = mkdir -p
 
+OS := $(shell uname)
+ifeq ($(OS),Darwin)
+	# Fix build fail on MacOS
+	CFLAGS += -I/usr/local/opt/openssl/include
+endif
+
 all: $(BUILDDIR) $(EXECUTABLE) 
 
 .PHONY: debugvd

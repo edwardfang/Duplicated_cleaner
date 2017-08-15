@@ -27,7 +27,7 @@ typedef struct{
     mode_t filetype;
     unsigned char * md5;
 } file_fingerprint;
-extern file_fingerprint* tree_root;
+file_fingerprint* tree_root;
 
 
 
