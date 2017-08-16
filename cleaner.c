@@ -91,8 +91,8 @@ int main(int argc, char *argv[])
     iterate_dir(rootpath);
 
     // free memory
-    free(rootpath);
     tdestroy(tree_root, list_free);
+    free(rootpath);
 
     return 0;
 }

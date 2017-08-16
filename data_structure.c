@@ -14,7 +14,11 @@ void list_free(void *ls_p)
     list *ls = (list *)ls_p;
     // delete the list here
     // debug_msg("Freeing the list for size %u, type %u", ls->filesize, ls->filetype);
-    verbose_msg("Freeing the list for size %u, type %u", ls->filesize, ls->filetype);
+    if(ls->init==0){
+        free(ls);
+        return;
+    }
+    verbose_msg("Freeshuoing the list for size %u, type %u", ls->filesize, ls->filetype);
     list_node *nd = ls->head, *nd_tmp;
     while (nd->next != NULL)
     {
@@ -93,6 +97,7 @@ void node_free(list_node *nd)
     }
     if (nd->md5 != NULL)
     {
+        verbose_msg("fault position2, md5: %d", nd->md5);
         free(nd->md5);
     }
     free(nd);

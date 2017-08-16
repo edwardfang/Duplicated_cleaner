@@ -12,13 +12,6 @@ typedef struct node
 } list_node;
 
 extern void *tree_root;
-/**
-file_fingerprint *ffpnew(const char *filepath, off_t filesize, mode_t filetype);
-
-void ffpfree(void *ffp);
-
-int ffp_compare(const void *ffp1, const void *ffp2);
-**/
 
 typedef struct
 {

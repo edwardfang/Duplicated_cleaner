@@ -8,7 +8,7 @@ typedef unsigned char uchar;
 
 char *pathtrim(const char *filepath)
 {
-    char *subpath = (char *)malloc(sizeof(char) * (strlen(filepath) - rootpathlen + 1)); // rootpath + subpath + '\0'
+    char *subpath = (char *)malloc(sizeof(char) * (strlen(filepath) - rootpathlen + 3)); // rootpath + subpath + '\0'
     strcpy(subpath, filepath + rootpathlen);
     debug_msg("Relative Path: %s", subpath);
     return subpath;
@@ -63,7 +63,7 @@ int compare(const char *filepath)
             if (finded_same != NULL)
             {
                 debug_msg("Same file found! %s", finded_same->filepath);
-                free(newfile);
+                node_free(newfile);
                 char *tmp_subpath = pathtrim(finded_same->filepath);
                 printf("%s\t%s\n", tmp_subpath, subpath);
                 free(tmp_subpath);
@@ -72,7 +72,7 @@ int compare(const char *filepath)
             {
                 list_additem(rls, newfile);
             }
-            free(ls_search);
+            list_free(ls_search);
         }
         else
         {
@@ -92,16 +92,23 @@ list_node *is_samefile_inlist(list *lst, list_node *newfile)
     {
         if (compare_file_blocks(nd, newfile) == 0)
         {
-            verbose_msg("MD5 Checking");
-            if (nd->md5 == NULL)
-            {
+            if(lst->filesize>MIN_BLOCK_COMPARE_SIZE){
+                verbose_msg("MD5 Checking");
+                if (nd->md5 == NULL)
+                {
+                    nd->md5 = getMD5(nd->filepath);
+                }
+                newfile->md5 = getMD5(newfile->filepath);
+                if (memcmp(newfile->md5, newfile->md5, MD5_DIGEST_LENGTH) == 0)
+                {
+                    return nd;
+                }
+            }else{
                 nd->md5 = getMD5(nd->filepath);
-            }
-            newfile->md5 = getMD5(newfile->filepath);
-            if (memcmp(newfile->md5, newfile->md5, MD5_DIGEST_LENGTH) == 0)
-            {
+                newfile->md5 = getMD5(newfile->filepath);
                 return nd;
             }
+            
         }
         debug_msg("Checking next item..");
         if (nd->next == NULL)
@@ -141,9 +148,9 @@ int check_privilege(const char *filepath)
 int compare_file_blocks(list_node *file1, list_node *file2)
 {
     unsigned int file_size = (unsigned int)file1->filesize;
-    char *subpath[2];
     if (verbose_mod)
     {
+        char *subpath[2];
         subpath[0] = pathtrim(file1->filepath);
         subpath[1] = pathtrim(file2->filepath);
         verbose_msg("Block Checking: File name: %s\t%s", subpath[0], subpath[1]);

@@ -31,7 +31,7 @@ debugpd:all
 
 .PHONY: debug
 debug:all
-	./build/cleaner ./build/
+	./build/cleaner ~
 
 $(EXECUTABLE):$(OBJECTS)
 	$(CC) $(CFLAGS)  -o $@ $^ $(LIBS)
