@@ -12,21 +12,29 @@ This is a collaborative lab assignment for CS205 in SUSTech
 
 ## Structure
 
- - dufinder.c deal with input arguments
+ - cleaner.c entry for the program
      - Display Usage: when abort due to error input
      - Input dir
      - debug arg
      - verbose arg more infomation
      - example ./cleaner mydir [-v] [-d]
- - file_tranverse.c tranverse all the files in the directory
-     - recursion
-     - duplicated files => stdout
+     - debug/info msg display function
      - -d debug info => stderr
      - -v current scanning dir; file details: size, type, hash => stderr
-     - auto f memory detection
- - comparision.c compare two files
+ - file_iterator.c tranverse all the files in the directory
+     - recursion
+     - dynamically allocated memory for the filepath
+ - file_compare.c
+     - check file read permission
+     - get the subpath
+     - duplicated files => stdout
+     - auto out of memory detection
      - check file size
-     - check first and last range of bytes (note the total size of file)
+     - check beginning, ending, and random block in large file
      - check file type
-     - check hash: ref: https://stackoverflow.com/questions/3395690/md5sum-of-file-in-linux-c
+     - check hash(actully fast only when dealing with multiple same big files) ref: https://stackoverflow.com/questions/3395690/md5sum-of-file-in-linux-c
+ - data_structure.c
+     - used to store the file info in a good data stucture for fast retriving
  - Makefile
+     - fast debug, just run `make debug`
+     - advanced `wildcards`, `patsubst`, etc.
