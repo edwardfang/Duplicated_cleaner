@@ -6,8 +6,7 @@
 
 int main()
 {
-    STAILQ_HEAD(stailhead, entry)
-    head = STAILQ_HEAD_INITIALIZER(head);
+    STAILQ_HEAD(stailhead, entry) head = STAILQ_HEAD_INITIALIZER(head);
     struct stailhead *headp; /* Singly-linked tail queue head. */
     struct entry
     {

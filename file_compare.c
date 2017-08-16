@@ -35,24 +35,30 @@ int compare(const char *filepath)
     {
         verbose_msg("Fetch file status failed: $s: %s, Error code: %d", subpath, strerror(errno), errno);
     }
+    // find the linked list with the same file size and the same file type
+    // st_mode & S_IFMT extract the file type code from a mode value.
+    list* ls = listheadnew(buffer.st_size, (unsigned int)buffer.st_mode & S_IFMT);
+    debug_msg("Size: %d, type: %u,  status=%d", (int)ls->filesize, ls->filetype, status);
     // store the file info into the node
-    file_fingerprint *ffp;
-    // extract the file type code from a mode value.
-    ffp = ffpnew(filepath, buffer.st_size, (unsigned int)buffer.st_mode & S_IFMT);
-    debug_msg("Size: %d, type: %u,  status=%d", (int)ffp->filesize, ffp->filetype, status);
+    //file_fingerprint *ffp;
+    
     // reference man page: http://man7.org/linux/man-pages/man3/tsearch.3.html
     // key points to the item to be searched for. rootp points to a variable which points to the root of the tree.
-    file_fingerprint ** ffpp = (file_fingerprint **)tsearch((void *)ffp, &tree_root, ffp_compare);
+    list ** lsp = (list **)tsearch((void *)ls, &tree_root, list_compare);
     // returns a pointer to the newly added item.
-    if (ffpp == NULL)
+    if (lsp == NULL)
     {
         debug_msg("Append child failed");
         exit(1);
     }
     else
     {
-        file_fingerprint * result_ffp = * ffpp;
-        debug_msg("Fin Size: %d, type: %d path: %s", result_ffp->filesize, result_ffp->filetype, result_ffp->filepath);
+        list * rls = * lsp;
+        debug_msg("Listinfo Size: %d, type: %d", rls->filesize, rls->filetype);
+        if(rls != ls){
+            debug_msg("A list already exists!");
+            // add the item to the existing list
+        }
         // if(fin == ffp) {
         //     //Not found
         //     debug_msg("Same file not found currently");
@@ -113,7 +119,7 @@ int check_privilege(const char *filepath)
 // the third comparision
 // 0 - same file
 // 1 - different file
-int compare_file_blocks(file_fingerprint *file1, file_fingerprint *file2)
+int compare_file_blocks(list_node *file1, list_node *file2)
 {
     unsigned int file_size = (unsigned int)file1->filesize;
     char *subpath[2];
