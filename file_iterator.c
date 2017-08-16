@@ -5,11 +5,8 @@ int iterate_dir(char *dirpath)
 {
     DIR *pDir; //定义一个DIR类的指针
     struct dirent *ent;
-    char childpath[1024]; // this should be dynamically aloocated
     verbose_msg("Scanning DIR: %s", dirpath);
-    pDir = opendir(dirpath);                 //  opendir方法打开path目录，并将地址付给pDir指针
-    memset(childpath, 0, sizeof(childpath)); //将字符数组childpath的数组元素全部置零
-    debug_msg("Memset Finished");
+    pDir = opendir(dirpath);
     if (NULL == pDir)
     {
         fprintf(stderr, "PATH : %s not exist,exit this function\n", dirpath);
@@ -23,10 +20,11 @@ int iterate_dir(char *dirpath)
             if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
                 //如果读取的d_name为 . 或者.. 表示读取的是当前目录符和上一目录符, 用contiue跳过，不进行下面的输出
                 continue;
-
+            char *childpath = (char *)malloc(sizeof(char) * (strlen(dirpath) + MAXNAMLEN + 1));
             sprintf(childpath, "%s%s/", dirpath, ent->d_name); //如果非. ..则将 路径 和 文件名d_name 付给childpath, 并在下一行prinf输出
             verbose_msg("New Path: %s", childpath);
             iterate_dir(childpath); // recursion
+            free(childpath);
         }
         else //如果读取的d_type类型不是 DT_DIR, 即读取的不是目录，而是文件，则直接输出 d_name, 即输出文件名
         {

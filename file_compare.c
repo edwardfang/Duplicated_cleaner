@@ -24,7 +24,6 @@ int compare(const char *filepath)
         verbose_msg("Ignore file: %s due to privilege limitation: %s", subpath, strerror(errno));
         return -1;
     }
-    debug_msg("Successfully access.");
     struct stat buffer;
     int status;
     status = lstat(filepath, &buffer);
@@ -62,11 +61,12 @@ int compare(const char *filepath)
             // add the item to the existing list
             if (finded_same != NULL)
             {
-                debug_msg("Same file found! %s", finded_same->filepath);
+                debug_msg("Same file found!");
                 node_free(newfile);
                 char *tmp_subpath = pathtrim(finded_same->filepath);
-                printf("%s\t%s\n", tmp_subpath, subpath);
+                //printf("%s\t%s\n", tmp_subpath, subpath);
                 free(tmp_subpath);
+                free(subpath);
             }
             else
             {
@@ -81,7 +81,6 @@ int compare(const char *filepath)
             debug_msg("Created a new list!");
         }
     }
-    free(subpath);
     return 0;
 }
 
@@ -92,7 +91,8 @@ list_node *is_samefile_inlist(list *lst, list_node *newfile)
     {
         if (compare_file_blocks(nd, newfile) == 0)
         {
-            if(lst->filesize>MIN_BLOCK_COMPARE_SIZE){
+            if (lst->filesize > MIN_BLOCK_COMPARE_SIZE)
+            {
                 verbose_msg("MD5 Checking");
                 if (nd->md5 == NULL)
                 {
@@ -103,12 +103,16 @@ list_node *is_samefile_inlist(list *lst, list_node *newfile)
                 {
                     return nd;
                 }
-            }else{
-                nd->md5 = getMD5(nd->filepath);
+            }
+            else
+            {
+                if (nd->md5 == NULL)
+                {
+                    nd->md5 = getMD5(nd->filepath);
+                }
                 newfile->md5 = getMD5(newfile->filepath);
                 return nd;
             }
-            
         }
         debug_msg("Checking next item..");
         if (nd->next == NULL)
@@ -247,7 +251,7 @@ uchar *getMD5(const char *filepath)
     MD5_CTX c;
     char buf[512];
     ssize_t bytes;
-    uchar *out = (uchar *)malloc(sizeof(uchar) * (MD5_DIGEST_LENGTH+1));
+    uchar *out = (uchar *)malloc(sizeof(uchar) * (MD5_DIGEST_LENGTH + 1));
 
     MD5_Init(&c);
     int fd;                        // FILE* fd;

@@ -18,7 +18,7 @@ void list_free(void *ls_p)
         free(ls);
         return;
     }
-    verbose_msg("Freeshuoing the list for size %u, type %u", ls->filesize, ls->filetype);
+    verbose_msg("Freeing the list for size %u, type %u", ls->filesize, ls->filetype);
     list_node *nd = ls->head, *nd_tmp;
     while (nd->next != NULL)
     {
@@ -90,15 +90,16 @@ list_node *node_new(const char *filepath, off_t filesize)
 
 void node_free(list_node *nd)
 {
-    debug_msg("Freeing file_node for %s",nd->filepath);
+    //printf("Freeing file_node for %s",nd->filepath);
     if (nd->filepath != NULL)
     {
         free((char *)nd->filepath);
     }
     if (nd->md5 != NULL)
     {
-        verbose_msg("fault position2, md5: %d", nd->md5);
+        printf("fault position2, md5: %u\n", nd->md5);
         free(nd->md5);
+        
     }
     free(nd);
 }
