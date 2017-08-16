@@ -3,6 +3,7 @@
 This is a collaborative lab assignment for CS205 in SUSTech
 
  - Programming Language C (enough)
+ - Group member: Yidong FANG 11510493, Yi XIE 11510074, Jiaqi ZHANG 11611907
  - Due: 14:00, July. 15
 
 ## How to run it
