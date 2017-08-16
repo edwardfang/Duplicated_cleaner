@@ -19,19 +19,19 @@ all: $(BUILDDIR) $(EXECUTABLE)
 
 .PHONY: debugvd
 debugvd:all
-	./build/cleaner -vd ~
+	$(EXECUTABLE) -vd ~
 
 .PHONY: debugv
 debugv:all
-	./build/cleaner -v ~
+	$(EXECUTABLE) -v ~
 
 .PHONY: debugpd
 debugpd:all
-	./build/cleaner -vd ./testfile
+	$(EXECUTABLE) -vd ./testfile
 
 .PHONY: debug
 debug:all
-	./build/cleaner ~
+	$(EXECUTABLE) ~
 
 $(EXECUTABLE):$(OBJECTS)
 	$(CC) $(CFLAGS)  -o $@ $^ $(LIBS)

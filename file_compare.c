@@ -1,6 +1,7 @@
 #include "du_scanner.h"
 #include <openssl/md5.h>
 #include <fcntl.h> //file control options
+#include "getRSS.h"
 
 #define MD5_DIGEST_LENGTH 16
 
@@ -18,12 +19,14 @@ int compare(const char *filepath)
 {
     char *subpath = pathtrim(filepath);
     debug_msg("Comparing File: %s", filepath);
+    file_count++;
     // ignore if no read permission
     if (check_privilege(filepath))
     {
         verbose_msg("Ignore file: %s due to privilege limitation: %s", subpath, strerror(errno));
         return -1;
     }
+
     struct stat buffer;
     int status;
     status = lstat(filepath, &buffer);
@@ -51,6 +54,7 @@ int compare(const char *filepath)
     }
     else
     {
+        // Find the same file
         list *rls = *lsp;
         debug_msg("Listinfo Size: %d, type: %d", rls->filesize, rls->filetype);
         if (rls != ls_search)
@@ -84,7 +88,23 @@ int compare(const char *filepath)
             debug_msg("Created a new list!");
         }
     }
+    memLimitCheck();
     return 0;
+}
+
+void memLimitCheck()
+{
+    if (file_count % 1000 == 0)
+    {
+        printf("MEM USAGE: %li MB\n", (unsigned long)getCurrentRSS()/(1024UL*1024UL));
+    }
+    if ((file_count % 1000 == 0) && MEMORY_LIMIT< (int)getCurrentRSS()/(1024UL*1024UL))
+    {
+        safeexit();
+        fprintf(stderr, "Memory out of limit! Exiting..\n");
+        exit(EXIT_FAILURE);
+    }
+    return;
 }
 
 list_node *is_samefile_inlist(list *lst, list_node *newfile)
@@ -110,7 +130,8 @@ list_node *is_samefile_inlist(list *lst, list_node *newfile)
         }
         else
         {
-            if(compare_file_blocks(nd, newfile) == 0){
+            if (compare_file_blocks(nd, newfile) == 0)
+            {
                 return nd;
             }
         }

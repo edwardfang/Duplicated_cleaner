@@ -10,6 +10,7 @@ This is a collaborative lab assignment for CS205 in SUSTech
 
  - First run `make`
  - Then just run `./build/duscanner dir [-v] [-d]`
+ - Memory limit of the program can be set by the `MEMORY_LIMIT` in `du_scanner.h` 
 
 ## Structure
 

@@ -9,7 +9,7 @@ int iterate_dir(char *dirpath)
     pDir = opendir(dirpath);
     if (NULL == pDir)
     {
-        fprintf(stderr, "PATH : %s not exist,exit this function\n", dirpath);
+        fprintf(stderr, "PATH : %s not exist or no permission, ignore\n", dirpath);
         return -1;
     }
     while ((ent = readdir(pDir)) != NULL) //读取pDir打开的目录，并赋值给ent, 同时判断是否目录为空，不为空则执行循环体

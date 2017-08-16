@@ -18,9 +18,12 @@
 
 #include <search.h>
 
+// Here to set the memory limit of the program
+#define MEMORY_LIMIT 1024 // Unit: MB
 #define MIN_BLOCK_COMPARE_SIZE 500
 #define BLOCK_SIZE 100
 
+extern long file_count;
 extern long num_du_files;
 extern int verbose_mod;
 extern int debug_mod;
@@ -28,6 +31,8 @@ extern char *rootpath;
 extern int rootpathlen;
 
 int main(int argc, char *argv[]);
+
+void safeexit();
 
 extern int verbose_msg(const char *fmt, ...);
 
@@ -44,5 +49,7 @@ int check_privilege(const char *filepath);
 int compare_file_blocks(list_node *file1, list_node *file2);
 
 list_node *is_samefile_inlist(list *lst, list_node *newfile);
+
+void memLimitCheck();
 
 #endif

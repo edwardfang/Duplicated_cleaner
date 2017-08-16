@@ -7,6 +7,7 @@ int rootpathlen;
 char *rootpath;
 void *tree_root = NULL;
 long num_du_files = 0;
+long file_count = 0;
 
 int main(int argc, char *argv[])
 {
@@ -90,12 +91,16 @@ int main(int argc, char *argv[])
 
     // begin to find duplicated files
     iterate_dir(rootpath);
+    safeexit();
+    return 0;
+}
 
+void safeexit()
+{
     // free memory
     tdestroy(tree_root, list_free);
     free(rootpath);
     verbose_msg("Totally %ld duplicated files found.", num_du_files);
-    return 0;
 }
 
 int verbose_msg(const char *fmt, ...)
