@@ -10,6 +10,11 @@
 #include <string.h>
 #include <stdarg.h>
 #include <errno.h>
+
+#define _GNU_SOURCE
+
+#define __USE_GNU
+
 #include <search.h>
 
 #define MIN_BLOCK_COMPARE_SIZE 500 
@@ -47,7 +52,7 @@ int compare_file_blocks(file_fingerprint* file1,file_fingerprint *file2 );
 
 file_fingerprint* ffpnew(const char* filepath,off_t filesize, mode_t filetype);
 
-void ffpfree(file_fingerprint* ffp);
+void ffpfree(void *ffp);
 
 int ffp_compare (const void* ffp1, const void* ffp2);   
 

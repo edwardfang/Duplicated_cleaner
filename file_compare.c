@@ -52,7 +52,6 @@ int compare(const char *filepath)
     else
     {
         file_fingerprint * result_ffp = * ffpp;
-        //fin = (file_fingerprint*)((uintptr_t)fin-32);
         debug_msg("Fin Size: %d, type: %d path: %s", result_ffp->filesize, result_ffp->filetype, result_ffp->filepath);
         // if(fin == ffp) {
         //     //Not found

@@ -4,7 +4,8 @@ LIBS=-lcrypto -lssl
 EXECUTABLE = $(BUILDDIR)/cleaner
 SOURCEDIR = .
 BUILDDIR = ./build
-SOURCES = $(wildcard $(SOURCEDIR)/*.cpp $(SOURCEDIR)/*.c)
+SOURSCE := $(wildcard $(SOURCEDIR)/*.cpp $(SOURCEDIR)/*.c)
+SOURCES := $(filter-out $(SOURCEDIR)/linkedlist_learn.c, $(SOURSCE))
 OBJECTS = $(patsubst $(SOURCEDIR)/%.c,$(BUILDDIR)/%.o,$(SOURCES))
 MKDIR_P = mkdir -p
 
