@@ -59,10 +59,10 @@ int compare(const char *filepath)
             debug_msg("A list already exists! Search the item.");
             // wheather the same file is in the list
             finded_same = is_samefile_inlist(rls, newfile);
-            debug_msg("is in %d", finded_same->filepath);
             // add the item to the existing list
             if (finded_same != NULL)
             {
+                debug_msg("Same file found! %s", finded_same->filepath);
                 free(newfile);
                 char *tmp_subpath = pathtrim(finded_same->filepath);
                 printf("%s\t%s\n", tmp_subpath, subpath);
@@ -103,6 +103,7 @@ list_node *is_samefile_inlist(list *lst, list_node *newfile)
                 return nd;
             }
         }
+        debug_msg("Checking next item..");
         if (nd->next == NULL)
         {
             break;
@@ -112,6 +113,7 @@ list_node *is_samefile_inlist(list *lst, list_node *newfile)
             nd = nd->next;
         }
     }
+    debug_msg("No same file found.");
     return NULL;
 }
 
@@ -151,21 +153,28 @@ int compare_file_blocks(list_node *file1, list_node *file2)
     int i;
     f1 = fopen(file1->filepath, "rb");
     f2 = fopen(file2->filepath, "rb");
+    debug_msg("Open files successfully");
     if (file_size > MIN_BLOCK_COMPARE_SIZE)
     {
         // scan the beginning
+        debug_msg("Begin block checking...");
+        fseek(f1, 0, SEEK_SET);
+        fseek(f2, 0, SEEK_SET);
         for (i = 0; i < BLOCK_SIZE; i++)
         {
-
             fread(&tmp1, 1, 1, f1);
             fread(&tmp2, 1, 1, f2);
+            //debug_msg("fread");
             if (tmp1 != tmp2)
             {
-                debug_msg("block diff 1");
+                //debug_msg("block diff 1");
+                fclose(f1);
+                fclose(f2);
                 return 1;
             }
         }
         // scan the end
+        debug_msg("End block checking...");
         fseek(f1, file_size - BLOCK_SIZE, SEEK_SET);
         fseek(f2, file_size - BLOCK_SIZE, SEEK_SET);
         for (i = 0; i < BLOCK_SIZE; i++)
@@ -175,10 +184,13 @@ int compare_file_blocks(list_node *file1, list_node *file2)
             if (tmp1 != tmp2)
             {
                 debug_msg("block diff 2");
+                fclose(f1);
+                fclose(f2);
                 return 1;
             }
         }
         // randomly scan the middle
+        debug_msg("Random Checking...");
         long offset = (rand() % (file_size - 2 * BLOCK_SIZE)) + 100;
         fseek(f1, offset, SEEK_SET);
         fseek(f2, offset, SEEK_SET);
@@ -189,6 +201,8 @@ int compare_file_blocks(list_node *file1, list_node *file2)
             if (tmp1 != tmp2)
             {
                 debug_msg("block diff 3");
+                fclose(f1);
+                fclose(f2);
                 return 1;
             }
         }
@@ -202,6 +216,8 @@ int compare_file_blocks(list_node *file1, list_node *file2)
             fread(&tmp2, 1, 1, f2);
             if (tmp1 != tmp2)
             {
+                fclose(f1);
+                fclose(f2);
                 return 1;
             }
         }

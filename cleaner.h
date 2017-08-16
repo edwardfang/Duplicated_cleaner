@@ -18,8 +18,8 @@
 
 #include <search.h>
 
-#define MIN_BLOCK_COMPARE_SIZE 500
-#define BLOCK_SIZE 100
+#define MIN_BLOCK_COMPARE_SIZE 1000
+#define BLOCK_SIZE 300
 
 extern int verbose_mod;
 extern int debug_mod;
