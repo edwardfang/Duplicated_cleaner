@@ -27,8 +27,9 @@ typedef struct {
     list_node* tail;
 }list;
 
-list* listheadnew(off_t filesize, unsigned int filetype);
-void listheadfree(void *lh);
+list_node *node_new(const char *filepath, off_t filesize);
+list* list_new(off_t filesize, unsigned int filetype);
+void list_free(void *ls_p);
 int list_additem(list* ls, list_node* item);
 int list_compare(const void *ls1, const void *ls2);
 

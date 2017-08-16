@@ -5,7 +5,7 @@ int verbose_mod = 0;
 int debug_mod = 0;
 int rootpathlen;
 char* rootpath;
-file_fingerprint* treeroot = NULL;
+void *tree_root = NULL;
 
 int main(int argc, char *argv[])
 {
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 
     // free memory
     free(rootpath);
-    tdestroy(tree_root,listheadfree);
+    tdestroy(tree_root,list_free);
 
     return 0;
 }

@@ -1,6 +1,6 @@
 #include "cleaner.h"
 
-list* listheadnew(off_t filesize, unsigned int filetype){
+list* list_new(off_t filesize, unsigned int filetype){
     list *ls = (list *) malloc(sizeof(list));
     ls->filesize = filesize;
     ls->filetype = filetype;
@@ -8,7 +8,7 @@ list* listheadnew(off_t filesize, unsigned int filetype){
     return ls;
 }
 
-void listheadfree(void *ls_p){
+void list_free(void *ls_p){
     list *ls = (list *) ls_p;
     // delete the list here
 
@@ -57,16 +57,16 @@ int list_compare(const void *ls_p1, const void *ls_p2){
     
 }
 
-/**
-file_fingerprint *ffpnew(const char *filepath, off_t filesize, unsigned int filetype)
-{
-    file_fingerprint *ffp = (file_fingerprint *)malloc(sizeof(file_fingerprint));
-    ffp->filepath = filepath;
-    ffp->filetype = filetype;
-    ffp->filesize = filesize;
-    return ffp;
-}
 
+list_node *node_new(const char *filepath, off_t filesize)
+{
+    list_node *lst_node = (list_node *)malloc(sizeof(list_node));
+    lst_node->filepath = filepath;
+    lst_node->filesize = filesize;
+    lst_node->next = NULL;
+    return lst_node;
+}
+/**
 void ffpfree(void *ffp)
 { // file_fingerprint*
     free((char *)((file_fingerprint *)ffp)->filepath);

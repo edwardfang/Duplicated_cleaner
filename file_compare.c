@@ -7,8 +7,6 @@
 
 typedef unsigned char uchar;
 
-void *tree_root = NULL;
-
 char *pathtrim(const char *filepath)
 {
     char *subpath = (char *)malloc(sizeof(char) * (strlen(filepath) - rootpathlen)); // rootpath + subpath + '\0'
@@ -35,16 +33,16 @@ int compare(const char *filepath)
     {
         verbose_msg("Fetch file status failed: $s: %s, Error code: %d", subpath, strerror(errno), errno);
     }
+
     // find the linked list with the same file size and the same file type
     // st_mode & S_IFMT extract the file type code from a mode value.
-    list* ls = listheadnew(buffer.st_size, (unsigned int)buffer.st_mode & S_IFMT);
-    debug_msg("Size: %d, type: %u,  status=%d", (int)ls->filesize, ls->filetype, status);
+    list* ls_search = list_new(buffer.st_size, (unsigned int)buffer.st_mode & S_IFMT);
+    debug_msg("Size: %d, type: %u,  status=%d", (int)ls_search->filesize, ls_search->filetype, status);
     // store the file info into the node
-    //file_fingerprint *ffp;
-    
+    list_node* file_node = node_new(filepath,buffer.st_size);
     // reference man page: http://man7.org/linux/man-pages/man3/tsearch.3.html
     // key points to the item to be searched for. rootp points to a variable which points to the root of the tree.
-    list ** lsp = (list **)tsearch((void *)ls, &tree_root, list_compare);
+    list ** lsp = (list **)tsearch((void *)ls_search, &tree_root, list_compare);
     // returns a pointer to the newly added item.
     if (lsp == NULL)
     {
@@ -55,16 +53,16 @@ int compare(const char *filepath)
     {
         list * rls = * lsp;
         debug_msg("Listinfo Size: %d, type: %d", rls->filesize, rls->filetype);
-        if(rls != ls){
+        if(rls != ls_search){
             debug_msg("A list already exists!");
             // add the item to the existing list
+            list_additem(rls,file_node);
+            free(ls_search);
+        }else{
+            debug_msg("Apeend to the new list!");
         }
-        // if(fin == ffp) {
-        //     //Not found
-        //     debug_msg("Same file not found currently");
-        //     return 1;
-        // }
     }
+    
     /**
     // test block comparision
     if(compare_file_blocks(fin, ffp) != 0) {
