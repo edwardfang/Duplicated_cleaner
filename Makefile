@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall
 LIBS=-lcrypto -lssl
-EXECUTABLE = $(BUILDDIR)/cleaner
+EXECUTABLE = $(BUILDDIR)/duscanner
 SOURCEDIR = .
 BUILDDIR = ./build
 SOURSCE := $(wildcard $(SOURCEDIR)/*.cpp $(SOURCEDIR)/*.c)

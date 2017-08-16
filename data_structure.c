@@ -1,4 +1,4 @@
-#include "cleaner.h"
+#include "du_scanner.h"
 
 list *list_new(off_t filesize, unsigned int filetype)
 {

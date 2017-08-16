@@ -1,4 +1,4 @@
-#include "cleaner.h"
+#include "du_scanner.h"
 #include "time.h"
 
 int verbose_mod = 0;
@@ -6,6 +6,7 @@ int debug_mod = 0;
 int rootpathlen;
 char *rootpath;
 void *tree_root = NULL;
+long num_du_files = 0;
 
 int main(int argc, char *argv[])
 {
@@ -93,7 +94,7 @@ int main(int argc, char *argv[])
     // free memory
     tdestroy(tree_root, list_free);
     free(rootpath);
-
+    verbose_msg("Totally %ld duplicated files found.", num_du_files);
     return 0;
 }
 

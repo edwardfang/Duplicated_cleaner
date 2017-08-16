@@ -1,4 +1,4 @@
-#include "cleaner.h"
+#include "du_scanner.h"
 #include <openssl/md5.h>
 #include <fcntl.h> //file control options
 
@@ -66,6 +66,7 @@ int compare(const char *filepath)
                 node_free(newfile);
                 char *tmp_subpath = pathtrim(finded_same->filepath);
                 printf("%s\t%s\n", tmp_subpath, subpath);
+                num_du_files++;
                 free(tmp_subpath);
                 free(subpath);
             }
@@ -90,9 +91,9 @@ list_node *is_samefile_inlist(list *lst, list_node *newfile)
     list_node *nd = lst->head;
     while (1)
     {
-        if (compare_file_blocks(nd, newfile) == 0)
+        if (lst->filesize > MIN_BLOCK_COMPARE_SIZE)
         {
-            if (lst->filesize > MIN_BLOCK_COMPARE_SIZE)
+            if (compare_file_blocks(nd, newfile) == 0)
             {
                 verbose_msg("MD5 Checking");
                 if (nd->md5 == NULL)
@@ -105,13 +106,10 @@ list_node *is_samefile_inlist(list *lst, list_node *newfile)
                     return nd;
                 }
             }
-            else
-            {
-                if (nd->md5 == NULL)
-                {
-                    nd->md5 = getMD5(nd->filepath);
-                }
-                newfile->md5 = getMD5(newfile->filepath);
+        }
+        else
+        {
+            if(compare_file_blocks(nd, newfile) == 0){
                 return nd;
             }
         }

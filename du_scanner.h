@@ -18,9 +18,10 @@
 
 #include <search.h>
 
-#define MIN_BLOCK_COMPARE_SIZE 1000
-#define BLOCK_SIZE 300
+#define MIN_BLOCK_COMPARE_SIZE 500
+#define BLOCK_SIZE 100
 
+extern long num_du_files;
 extern int verbose_mod;
 extern int debug_mod;
 extern char *rootpath;

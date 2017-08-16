@@ -1,4 +1,4 @@
-#include "cleaner.h"
+#include "du_scanner.h"
 
 // referred from vivian's code
 int iterate_dir(char *dirpath)
