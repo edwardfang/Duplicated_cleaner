@@ -5,11 +5,11 @@ int iterate_dir(char *dirpath)
 {
     DIR *pDir;          //定义一个DIR类的指针
     struct dirent *ent; 
-    char childpath[512]; // this should be dynamically aloocated
+    char childpath[1024]; // this should be dynamically aloocated
     verbose_msg("Scanning DIR: %s",dirpath);
     pDir = opendir(dirpath);                    //  opendir方法打开path目录，并将地址付给pDir指针
     memset(childpath, 0, sizeof(childpath)); //将字符数组childpath的数组元素全部置零
-
+    debug_msg("Memset Finished");
     if (NULL == pDir)
     {
         fprintf(stderr,"PATH : %s not exist,exit this function\n",dirpath);
@@ -33,7 +33,6 @@ int iterate_dir(char *dirpath)
             char *filepath = malloc(sizeof(char)*(strlen(dirpath)+strlen(ent->d_name)+2));
             sprintf(filepath, "%s%s", dirpath, ent->d_name); 
             compare(filepath);
-            // free(filepath);
         }
     }
     closedir(pDir);

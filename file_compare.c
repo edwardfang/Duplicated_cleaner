@@ -9,7 +9,7 @@ typedef unsigned char uchar;
 
 char *pathtrim(const char *filepath)
 {
-    char *subpath = (char *)malloc(sizeof(char) * (strlen(filepath) - rootpathlen)); // rootpath + subpath + '\0'
+    char *subpath = (char *)malloc(sizeof(char) * (strlen(filepath) - rootpathlen+1)); // rootpath + subpath + '\0'
     strcpy(subpath, filepath + rootpathlen);
     debug_msg("Relative Path: %s", subpath);
     return subpath;
@@ -44,7 +44,6 @@ int compare(const char *filepath)
     // key points to the item to be searched for. rootp points to a variable which points to the root of the tree.
     list ** lsp = (list **)tsearch((void *)ls_search, &tree_root, list_compare);
     // returns a pointer to the newly added item.
-
     list_node* finded_same; //0 true 1 false
     if (lsp == NULL)
     {

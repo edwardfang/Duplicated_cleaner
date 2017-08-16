@@ -19,7 +19,7 @@ all: $(BUILDDIR) $(EXECUTABLE)
 
 .PHONY: debugvd
 debugvd:all
-	./build/cleaner -vd ./build/
+	./build/cleaner -vd ~
 
 .PHONY: debugv
 debugv:all
