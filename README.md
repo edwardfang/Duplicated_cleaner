@@ -37,6 +37,12 @@ This is a collaborative lab assignment for CS205 in SUSTech
      - check hash(actully fast only when dealing with multiple same big files) ref: https://stackoverflow.com/questions/3395690/md5sum-of-file-in-linux-c
  - data_structure.c
      - used to store the file info in a good data stucture for fast retriving
+     - banlanced tree from GNU
+     - self-defined linked list
+     - self-defined file info structure
+ - getRSS.c
+     - get memory usage info from the system
+     - ref: http://NadeauSoftware.com/
  - Makefile
      - fast debug, just run `make debug`
      - advanced `wildcards`, `patsubst`, etc.
