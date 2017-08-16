@@ -1,35 +1,52 @@
 #include "cleaner.h"
 
-list* list_new(off_t filesize, unsigned int filetype){
-    list *ls = (list *) malloc(sizeof(list));
+list *list_new(off_t filesize, unsigned int filetype)
+{
+    list *ls = (list *)malloc(sizeof(list));
     ls->filesize = filesize;
     ls->filetype = filetype;
     ls->init = 0;
     return ls;
 }
 
-void list_free(void *ls_p){
-    list *ls = (list *) ls_p;
+void list_free(void *ls_p)
+{
+    list *ls = (list *)ls_p;
     // delete the list here
-
+    debug_msg("Freeing the list for size %u, type %u", ls->filesize, ls->filetype);
+    list_node* nd = ls->head,*nd_tmp;
+    while(nd->next!=NULL){
+        nd_tmp = nd->next;
+        node_free(nd);
+        nd = nd_tmp;
+    }
+    node_free(nd);
     // free list struct
     free(ls);
 }
 
-int list_additem(list *ls, list_node* item){
-    if(ls->init == 0){
-        // new node as head
+int list_additem(list *ls, list_node *item)
+{
+    if (ls->init == 0)
+    {
+        ls->head = item;
+        ls->init = 1;
     }
-    // insert after head
-    ls->init = 1;
+    else
+    {
+        item->next = ls->head;
+        ls->head = item;
+    }
+    // insert before head
     return 0;
 }
 
 // compar points to a comparison routine, which takes pointers to two items.
-int list_compare(const void *ls_p1, const void *ls_p2){
+int list_compare(const void *ls_p1, const void *ls_p2)
+{
     {
-        list *ls1 = (list *) ls_p1;
-        list *ls2 = (list *) ls_p2;
+        list *ls1 = (list *)ls_p1;
+        list *ls2 = (list *)ls_p2;
         if (ls1->filesize > ls2->filesize)
         {
             return 1;
@@ -54,9 +71,7 @@ int list_compare(const void *ls_p1, const void *ls_p2){
             }
         }
     }
-    
 }
-
 
 list_node *node_new(const char *filepath, off_t filesize)
 {
@@ -66,44 +81,14 @@ list_node *node_new(const char *filepath, off_t filesize)
     lst_node->next = NULL;
     return lst_node;
 }
-/**
-void ffpfree(void *ffp)
-{ // file_fingerprint*
-    free((char *)((file_fingerprint *)ffp)->filepath);
-    if (((file_fingerprint *)ffp)->md5)
-    {
-        free(((file_fingerprint *)ffp)->md5);
-    }
-    free(ffp);
-}
 
-// compar points to a comparison routine, which takes pointers to two items.
-int ffp_compare(const void *ffp1, const void *ffp2)
-{
-    file_fingerprint *fp1 = (file_fingerprint *)ffp1;
-    file_fingerprint *fp2 = (file_fingerprint *)ffp2;
-    if (fp1->filesize > fp2->filesize)
-    {
-        return 1;
+void node_free(list_node* nd){
+    //debug_msg("Freeing file_node for %s",nd->filepath);
+    if(nd->filepath!=NULL){
+        free((char *)nd->filepath);
     }
-    else if (fp1->filesize < fp2->filesize)
-    {
-        return -1;
+    if(nd->md5!=NULL){
+        free(nd->md5);
     }
-    else
-    {
-        if (fp1->filetype > fp2->filetype)
-        {
-            return 1;
-        }
-        else if (fp1->filetype < fp2->filetype)
-        {
-            return -1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
+    free(nd);
 }
-**/

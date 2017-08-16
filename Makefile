@@ -21,6 +21,10 @@ all: $(BUILDDIR) $(EXECUTABLE)
 debugvd:all
 	./build/cleaner -vd ./build/
 
+.PHONY: debugv
+debugv:all
+	./build/cleaner -v ./build/
+
 .PHONY: debugpd
 debugpd:all
 	./build/cleaner -vd ./testfile

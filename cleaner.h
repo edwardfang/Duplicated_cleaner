@@ -42,4 +42,6 @@ int check_privilege(const char *filepath);
 
 int compare_file_blocks(list_node *file1, list_node *file2);
 
+list_node* is_samefile_inlist(list* lst, list_node* newfile);
+
 #endif

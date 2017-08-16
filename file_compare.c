@@ -39,11 +39,13 @@ int compare(const char *filepath)
     list* ls_search = list_new(buffer.st_size, (unsigned int)buffer.st_mode & S_IFMT);
     debug_msg("Size: %d, type: %u,  status=%d", (int)ls_search->filesize, ls_search->filetype, status);
     // store the file info into the node
-    list_node* file_node = node_new(filepath,buffer.st_size);
+    list_node* newfile = node_new(filepath,buffer.st_size);
     // reference man page: http://man7.org/linux/man-pages/man3/tsearch.3.html
     // key points to the item to be searched for. rootp points to a variable which points to the root of the tree.
     list ** lsp = (list **)tsearch((void *)ls_search, &tree_root, list_compare);
     // returns a pointer to the newly added item.
+
+    list_node* finded_same; //0 true 1 false
     if (lsp == NULL)
     {
         debug_msg("Append child failed");
@@ -54,46 +56,52 @@ int compare(const char *filepath)
         list * rls = * lsp;
         debug_msg("Listinfo Size: %d, type: %d", rls->filesize, rls->filetype);
         if(rls != ls_search){
-            debug_msg("A list already exists!");
+            // list exists
+            debug_msg("A list already exists! Search the item.");
+            // wheather the same file is in the list
+            finded_same = is_samefile_inlist(rls,newfile);
+            debug_msg("is in %d", finded_same->filepath);
             // add the item to the existing list
-            list_additem(rls,file_node);
+            if(finded_same!=NULL){
+                free(newfile);
+                char * tmp_subpath = pathtrim(finded_same->filepath);
+                printf("%s\t%s\n",tmp_subpath,subpath);
+                free(tmp_subpath);
+            }else{
+                list_additem(rls,newfile);
+            }
             free(ls_search);
         }else{
-            debug_msg("Apeend to the new list!");
+            // list not exist
+            list_additem(rls,newfile);
+            debug_msg("Created a new list!");
         }
     }
-    
-    /**
-    // test block comparision
-    if(compare_file_blocks(fin, ffp) != 0) {
-        //Different file, return
-        return 1;
-    }
-    // test MD5
-    char path1[rootpathlen+strlen(ffp->filepath)+1];
-    //printf("%s\n", rootpath);
-    strcpy(path1, rootpath);
-    //printf("seek\n");
-    strcat(path1, ffp->filepath);
-    ffp -> md5 = getMD5(path1);
-    char path2[rootpathlen+strlen((*fin)->filepath)+1];
-    strcpy(path2, rootpath);
-    strcat(path2, (*fin)->filepath);
-    (*fin) -> md5 = getMD5(path2);
-    for(int i=0;i<MD5_DIGEST_LENGTH;i++) {
-        if(ffp->md5[i] != fin->md5[i])
-            return 1;
-    }
-    
-    //Got the same file, output them
-    printf("Duplicate file found:\n%s\n%s\n", ffp->filepath, fin->filepath);
-    //uchar * md5 = getMD5(filepath);
-    //debug_msg("MD5: %x", md5);
-    //free(md5);
-    // maintain the info in a binary tree
-    **/
     free(subpath);
     return 0;
+}
+
+list_node* is_samefile_inlist(list* lst, list_node* newfile){
+    list_node* nd = lst->head;
+    while(1){
+        if(compare_file_blocks(nd, newfile)==0)
+        {
+            verbose_msg("MD5 Checking");
+            if(nd->md5==NULL){
+                nd->md5 = getMD5(nd->filepath);
+            }
+            newfile->md5 = getMD5(newfile->filepath);
+            if(memcmp(newfile->md5, newfile->md5,MD5_DIGEST_LENGTH)==0){
+                return nd;
+            }
+        }
+        if(nd->next==NULL){
+            break;
+        }else{
+            nd = nd->next;
+        }
+    }
+    return NULL;
 }
 
 // ignore the files that can not be read; test privilege
@@ -138,10 +146,11 @@ int compare_file_blocks(list_node *file1, list_node *file2)
         for (i = 0; i < BLOCK_SIZE; i++)
         {
 
-            fread(&tmp2, 1, 1, f1);
+            fread(&tmp1, 1, 1, f1);
             fread(&tmp2, 1, 1, f2);
             if (tmp1 != tmp2)
             {
+                debug_msg("block diff 1");
                 return 1;
             }
         }
@@ -150,10 +159,11 @@ int compare_file_blocks(list_node *file1, list_node *file2)
         fseek(f2, file_size - BLOCK_SIZE, SEEK_SET);
         for (i = 0; i < BLOCK_SIZE; i++)
         {
-            fread(&tmp2, 1, 1, f1);
+            fread(&tmp1, 1, 1, f1);
             fread(&tmp2, 1, 1, f2);
             if (tmp1 != tmp2)
             {
+                debug_msg("block diff 2");
                 return 1;
             }
         }
@@ -163,10 +173,11 @@ int compare_file_blocks(list_node *file1, list_node *file2)
         fseek(f2, offset, SEEK_SET);
         for (i = 0; i < BLOCK_SIZE; i++)
         {
-            fread(&tmp2, 1, 1, f1);
+            fread(&tmp1, 1, 1, f1);
             fread(&tmp2, 1, 1, f2);
             if (tmp1 != tmp2)
             {
+                debug_msg("block diff 3");
                 return 1;
             }
         }
@@ -197,10 +208,9 @@ uchar *getMD5(const char *filepath)
     MD5_CTX c;
     char buf[512];
     ssize_t bytes;
-    uchar *out = (uchar *)malloc(sizeof(char) * (MD5_DIGEST_LENGTH + 1));
+    uchar *out = (uchar *)malloc(sizeof(char) * (MD5_DIGEST_LENGTH));
 
     MD5_Init(&c);
-    //debug_msg("MD5_Init");
     int fd;                        // FILE* fd;
     fd = open(filepath, O_RDONLY); // or fd = fopen(filepath, "rb");
     bytes = read(fd, buf, 512);
@@ -214,7 +224,6 @@ uchar *getMD5(const char *filepath)
     }
 
     MD5_Final(out, &c);
-    debug_msg("MD5_Final");
     if (debug_mod)
     {
         fprintf(stderr, "[DEBUG]");
