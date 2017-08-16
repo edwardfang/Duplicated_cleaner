@@ -4,7 +4,7 @@
 int verbose_mod = 0;
 int debug_mod = 0;
 int rootpathlen;
-char* rootpath;
+char *rootpath;
 void *tree_root = NULL;
 
 int main(int argc, char *argv[])
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    if (argc!=optind+1)
+    if (argc != optind + 1)
     {
         fprintf(stderr, "You must specify one and only one directory for scanning!\n");
         fprintf(stderr, usage, argv[0]);
@@ -55,17 +55,20 @@ int main(int argc, char *argv[])
     }
 
     // processing of the root path
-    rootpath = (char *) malloc(sizeof(char)*(strlen(argv[optind])+2));
+    rootpath = (char *)malloc(sizeof(char) * (strlen(argv[optind]) + 2));
     strcpy(rootpath, argv[optind]);
     rootpathlen = strlen(rootpath);
     char ch;
-    if((ch = rootpath[rootpathlen - 1]) == '/'){
+    if ((ch = rootpath[rootpathlen - 1]) == '/')
+    {
         while ((ch = rootpath[rootpathlen - 2]) == '/')
         {
             rootpath[rootpathlen - 1] = 0;
             rootpathlen--;
         }
-    }else{
+    }
+    else
+    {
         debug_msg("Add '/' to root_path");
         rootpath[rootpathlen++] = '/';
         rootpath[rootpathlen] = 0;
@@ -89,7 +92,7 @@ int main(int argc, char *argv[])
 
     // free memory
     free(rootpath);
-    tdestroy(tree_root,list_free);
+    tdestroy(tree_root, list_free);
 
     return 0;
 }

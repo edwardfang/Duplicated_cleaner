@@ -3,16 +3,16 @@
 // referred from vivian's code
 int iterate_dir(char *dirpath)
 {
-    DIR *pDir;          //定义一个DIR类的指针
-    struct dirent *ent; 
+    DIR *pDir; //定义一个DIR类的指针
+    struct dirent *ent;
     char childpath[1024]; // this should be dynamically aloocated
-    verbose_msg("Scanning DIR: %s",dirpath);
-    pDir = opendir(dirpath);                    //  opendir方法打开path目录，并将地址付给pDir指针
+    verbose_msg("Scanning DIR: %s", dirpath);
+    pDir = opendir(dirpath);                 //  opendir方法打开path目录，并将地址付给pDir指针
     memset(childpath, 0, sizeof(childpath)); //将字符数组childpath的数组元素全部置零
     debug_msg("Memset Finished");
     if (NULL == pDir)
     {
-        fprintf(stderr,"PATH : %s not exist,exit this function\n",dirpath);
+        fprintf(stderr, "PATH : %s not exist,exit this function\n", dirpath);
         return -1;
     }
     while ((ent = readdir(pDir)) != NULL) //读取pDir打开的目录，并赋值给ent, 同时判断是否目录为空，不为空则执行循环体
@@ -30,13 +30,12 @@ int iterate_dir(char *dirpath)
         }
         else //如果读取的d_type类型不是 DT_DIR, 即读取的不是目录，而是文件，则直接输出 d_name, 即输出文件名
         {
-            char *filepath = malloc(sizeof(char)*(strlen(dirpath)+strlen(ent->d_name)+2));
-            sprintf(filepath, "%s%s", dirpath, ent->d_name); 
+            char *filepath = malloc(sizeof(char) * (strlen(dirpath) + strlen(ent->d_name) + 2));
+            sprintf(filepath, "%s%s", dirpath, ent->d_name);
             compare(filepath);
         }
     }
     closedir(pDir);
 
     return 0;
-
 }

@@ -6,14 +6,15 @@
 
 int main()
 {
-    STAILQ_HEAD(stailhead, entry) head = STAILQ_HEAD_INITIALIZER(head);
+    STAILQ_HEAD(stailhead, entry)
+    head = STAILQ_HEAD_INITIALIZER(head);
     struct stailhead *headp; /* Singly-linked tail queue head. */
     struct entry
     {
-        STAILQ_ENTRY(entry) entries;
-        char* s; /* Tail queue. */
+        STAILQ_ENTRY(entry)
+        entries;
+        char *s; /* Tail queue. */
     } * n1, *n2, *n3, *np;
-
 
     STAILQ_INIT(&head); /* Initialize the queue. */
 
@@ -24,8 +25,8 @@ int main()
     STAILQ_INSERT_TAIL(&head, n1, entries);
 
     n2 = malloc(sizeof(struct entry)); /* Insert after. */
-    n1->s = (char *) malloc (sizeof(char)*10);
-    strcpy(n1->s,"Hello");
+    n1->s = (char *)malloc(sizeof(char) * 10);
+    strcpy(n1->s, "Hello");
     //n2->s = (char *) malloc (sizeof(char)*10);
     //strcpy(n2->s,"Hello");
     STAILQ_INSERT_AFTER(&head, n1, n2, entries);
@@ -37,11 +38,12 @@ int main()
     STAILQ_REMOVE_HEAD(&head, entries);
     free(n3);
     /* Forward traversal. */
-    STAILQ_FOREACH(np, &head, entries){
-        printf("%s\n",np->s);
+    STAILQ_FOREACH(np, &head, entries)
+    {
+        printf("%s\n", np->s);
     }
     //np->...
-        /* TailQ Deletion. */
+    /* TailQ Deletion. */
     while (!STAILQ_EMPTY(&head))
     {
         n1 = STAILQ_FIRST(&head);

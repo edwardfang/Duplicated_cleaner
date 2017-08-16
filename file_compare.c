@@ -2,14 +2,13 @@
 #include <openssl/md5.h>
 #include <fcntl.h> //file control options
 
-
 #define MD5_DIGEST_LENGTH 16
 
 typedef unsigned char uchar;
 
 char *pathtrim(const char *filepath)
 {
-    char *subpath = (char *)malloc(sizeof(char) * (strlen(filepath) - rootpathlen+1)); // rootpath + subpath + '\0'
+    char *subpath = (char *)malloc(sizeof(char) * (strlen(filepath) - rootpathlen + 1)); // rootpath + subpath + '\0'
     strcpy(subpath, filepath + rootpathlen);
     debug_msg("Relative Path: %s", subpath);
     return subpath;
@@ -36,15 +35,15 @@ int compare(const char *filepath)
 
     // find the linked list with the same file size and the same file type
     // st_mode & S_IFMT extract the file type code from a mode value.
-    list* ls_search = list_new(buffer.st_size, (unsigned int)buffer.st_mode & S_IFMT);
+    list *ls_search = list_new(buffer.st_size, (unsigned int)buffer.st_mode & S_IFMT);
     debug_msg("Size: %d, type: %u,  status=%d", (int)ls_search->filesize, ls_search->filetype, status);
     // store the file info into the node
-    list_node* newfile = node_new(filepath,buffer.st_size);
+    list_node *newfile = node_new(filepath, buffer.st_size);
     // reference man page: http://man7.org/linux/man-pages/man3/tsearch.3.html
     // key points to the item to be searched for. rootp points to a variable which points to the root of the tree.
-    list ** lsp = (list **)tsearch((void *)ls_search, &tree_root, list_compare);
+    list **lsp = (list **)tsearch((void *)ls_search, &tree_root, list_compare);
     // returns a pointer to the newly added item.
-    list_node* finded_same; //0 true 1 false
+    list_node *finded_same; //0 true 1 false
     if (lsp == NULL)
     {
         debug_msg("Append child failed");
@@ -52,27 +51,33 @@ int compare(const char *filepath)
     }
     else
     {
-        list * rls = * lsp;
+        list *rls = *lsp;
         debug_msg("Listinfo Size: %d, type: %d", rls->filesize, rls->filetype);
-        if(rls != ls_search){
+        if (rls != ls_search)
+        {
             // list exists
             debug_msg("A list already exists! Search the item.");
             // wheather the same file is in the list
-            finded_same = is_samefile_inlist(rls,newfile);
+            finded_same = is_samefile_inlist(rls, newfile);
             debug_msg("is in %d", finded_same->filepath);
             // add the item to the existing list
-            if(finded_same!=NULL){
+            if (finded_same != NULL)
+            {
                 free(newfile);
-                char * tmp_subpath = pathtrim(finded_same->filepath);
-                printf("%s\t%s\n",tmp_subpath,subpath);
+                char *tmp_subpath = pathtrim(finded_same->filepath);
+                printf("%s\t%s\n", tmp_subpath, subpath);
                 free(tmp_subpath);
-            }else{
-                list_additem(rls,newfile);
+            }
+            else
+            {
+                list_additem(rls, newfile);
             }
             free(ls_search);
-        }else{
+        }
+        else
+        {
             // list not exist
-            list_additem(rls,newfile);
+            list_additem(rls, newfile);
             debug_msg("Created a new list!");
         }
     }
@@ -80,23 +85,30 @@ int compare(const char *filepath)
     return 0;
 }
 
-list_node* is_samefile_inlist(list* lst, list_node* newfile){
-    list_node* nd = lst->head;
-    while(1){
-        if(compare_file_blocks(nd, newfile)==0)
+list_node *is_samefile_inlist(list *lst, list_node *newfile)
+{
+    list_node *nd = lst->head;
+    while (1)
+    {
+        if (compare_file_blocks(nd, newfile) == 0)
         {
             verbose_msg("MD5 Checking");
-            if(nd->md5==NULL){
+            if (nd->md5 == NULL)
+            {
                 nd->md5 = getMD5(nd->filepath);
             }
             newfile->md5 = getMD5(newfile->filepath);
-            if(memcmp(newfile->md5, newfile->md5,MD5_DIGEST_LENGTH)==0){
+            if (memcmp(newfile->md5, newfile->md5, MD5_DIGEST_LENGTH) == 0)
+            {
                 return nd;
             }
         }
-        if(nd->next==NULL){
+        if (nd->next == NULL)
+        {
             break;
-        }else{
+        }
+        else
+        {
             nd = nd->next;
         }
     }
