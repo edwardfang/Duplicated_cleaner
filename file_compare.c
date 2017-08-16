@@ -153,6 +153,10 @@ int compare_file_blocks(list_node *file1, list_node *file2)
     int i;
     f1 = fopen(file1->filepath, "rb");
     f2 = fopen(file2->filepath, "rb");
+    if (f1 == NULL || f2 == NULL)
+    {
+        perror("File open failed");
+    }
     debug_msg("Open files successfully");
     if (file_size > MIN_BLOCK_COMPARE_SIZE)
     {
@@ -216,6 +220,7 @@ int compare_file_blocks(list_node *file1, list_node *file2)
             fread(&tmp2, 1, 1, f2);
             if (tmp1 != tmp2)
             {
+
                 fclose(f1);
                 fclose(f2);
                 return 1;
@@ -235,7 +240,7 @@ uchar *getMD5(const char *filepath)
     MD5_CTX c;
     char buf[512];
     ssize_t bytes;
-    uchar *out = (uchar *)malloc(sizeof(char) * (MD5_DIGEST_LENGTH));
+    uchar *out = (uchar *)malloc(sizeof(uchar) * (MD5_DIGEST_LENGTH+1));
 
     MD5_Init(&c);
     int fd;                        // FILE* fd;
@@ -258,6 +263,6 @@ uchar *getMD5(const char *filepath)
             fprintf(stderr, "%02x", out[n]);
         fprintf(stderr, "\n");
     }
-
+    close(fd);
     return out;
 }

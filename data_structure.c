@@ -13,7 +13,8 @@ void list_free(void *ls_p)
 {
     list *ls = (list *)ls_p;
     // delete the list here
-    debug_msg("Freeing the list for size %u, type %u", ls->filesize, ls->filetype);
+    // debug_msg("Freeing the list for size %u, type %u", ls->filesize, ls->filetype);
+    verbose_msg("Freeing the list for size %u, type %u", ls->filesize, ls->filetype);
     list_node *nd = ls->head, *nd_tmp;
     while (nd->next != NULL)
     {
@@ -85,7 +86,7 @@ list_node *node_new(const char *filepath, off_t filesize)
 
 void node_free(list_node *nd)
 {
-    //debug_msg("Freeing file_node for %s",nd->filepath);
+    debug_msg("Freeing file_node for %s",nd->filepath);
     if (nd->filepath != NULL)
     {
         free((char *)nd->filepath);

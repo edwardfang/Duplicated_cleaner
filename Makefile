@@ -23,7 +23,7 @@ debugvd:all
 
 .PHONY: debugv
 debugv:all
-	./build/cleaner -v ./build/
+	./build/cleaner -v ~
 
 .PHONY: debugpd
 debugpd:all
