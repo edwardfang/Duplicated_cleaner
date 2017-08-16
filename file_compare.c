@@ -96,7 +96,7 @@ void memLimitCheck()
 {
     if (file_count % 1000 == 0)
     {
-        printf("MEM USAGE: %li MB\n", (unsigned long)getCurrentRSS()/(1024UL*1024UL));
+        debug_msg("MEM USAGE: %li MB\n", (unsigned long)getCurrentRSS()/(1024UL*1024UL));
     }
     if ((file_count % 1000 == 0) && MEMORY_LIMIT< (int)getCurrentRSS()/(1024UL*1024UL))
     {
