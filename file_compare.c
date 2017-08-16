@@ -58,13 +58,14 @@ int compare(const char *filepath)
             debug_msg("A list already exists! Search the item.");
             // wheather the same file is in the list
             finded_same = is_samefile_inlist(rls, newfile);
+
             // add the item to the existing list
             if (finded_same != NULL)
             {
                 debug_msg("Same file found!");
                 node_free(newfile);
                 char *tmp_subpath = pathtrim(finded_same->filepath);
-                //printf("%s\t%s\n", tmp_subpath, subpath);
+                printf("%s\t%s\n", tmp_subpath, subpath);
                 free(tmp_subpath);
                 free(subpath);
             }

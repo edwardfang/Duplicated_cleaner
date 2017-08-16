@@ -29,6 +29,7 @@ void list_free(void *ls_p)
     node_free(nd);
     // free list struct
     free(ls);
+    return;
 }
 
 int list_additem(list *ls, list_node *item)
@@ -85,19 +86,19 @@ list_node *node_new(const char *filepath, off_t filesize)
     lst_node->filepath = filepath;
     lst_node->filesize = filesize;
     lst_node->next = NULL;
+    lst_node->md5 = NULL;
     return lst_node;
 }
 
 void node_free(list_node *nd)
 {
-    //printf("Freeing file_node for %s",nd->filepath);
+    debug_msg("Freeing file_node for %s",nd->filepath);
     if (nd->filepath != NULL)
     {
         free((char *)nd->filepath);
     }
     if (nd->md5 != NULL)
     {
-        printf("fault position2, md5: %u\n", nd->md5);
         free(nd->md5);
         
     }
