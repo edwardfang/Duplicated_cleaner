@@ -17,7 +17,7 @@ char *pathtrim(const char *filepath)
 int compare(const char *filepath)
 {
     char *subpath = pathtrim(filepath);
-    verbose_msg("Comparing File: %s", filepath);
+    debug_msg("Comparing File: %s", filepath);
     // ignore if no read permission
     if (check_privilege(filepath))
     {
@@ -30,6 +30,7 @@ int compare(const char *filepath)
     if (status != 0)
     {
         verbose_msg("Fetch file status failed: $s: %s, Error code: %d", subpath, strerror(errno), errno);
+        return -1;
     }
 
     // find the linked list with the same file size and the same file type
@@ -95,7 +96,7 @@ list_node *is_samefile_inlist(list *lst, list_node *newfile)
         {
             if (compare_file_blocks(nd, newfile) == 0)
             {
-                verbose_msg("MD5 Checking");
+                debug_msg("MD5 Checking");
                 if (nd->md5 == NULL)
                 {
                     nd->md5 = getMD5(nd->filepath);
@@ -151,12 +152,12 @@ int check_privilege(const char *filepath)
 int compare_file_blocks(list_node *file1, list_node *file2)
 {
     unsigned int file_size = (unsigned int)file1->filesize;
-    if (verbose_mod)
+    if (debug_mod)
     {
         char *subpath[2];
         subpath[0] = pathtrim(file1->filepath);
         subpath[1] = pathtrim(file2->filepath);
-        verbose_msg("Block Checking: File name: %s\t%s", subpath[0], subpath[1]);
+        debug_msg("Block Checking: File name: %s\t%s", subpath[0], subpath[1]);
     }
     FILE *f1, *f2;
     char tmp1, tmp2;

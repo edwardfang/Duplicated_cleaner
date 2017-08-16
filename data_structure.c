@@ -18,7 +18,7 @@ void list_free(void *ls_p)
         free(ls);
         return;
     }
-    verbose_msg("Freeing the list for size %u, type %u", ls->filesize, ls->filetype);
+    debug_msg("Freeing the list for size %u, type %u", ls->filesize, ls->filetype);
     list_node *nd = ls->head, *nd_tmp;
     while (nd->next != NULL)
     {

@@ -22,7 +22,7 @@ int iterate_dir(char *dirpath)
                 continue;
             char *childpath = (char *)malloc(sizeof(char) * (strlen(dirpath) + MAXNAMLEN + 1));
             sprintf(childpath, "%s%s/", dirpath, ent->d_name); //如果非. ..则将 路径 和 文件名d_name 付给childpath, 并在下一行prinf输出
-            verbose_msg("New Path: %s", childpath);
+            debug_msg("New Path: %s", childpath);
             iterate_dir(childpath); // recursion
             free(childpath);
         }

@@ -8,11 +8,11 @@ This is a collaborative lab assignment for CS205 in SUSTech
 ## How to run it
 
  - First run `make`
- - Then just run `./build/cleaner dir [-v] [-d]`
+ - Then just run `./build/duscanner dir [-v] [-d]`
 
 ## Structure
 
- - cleaner.c entry for the program
+ - du_scanner.c entry for the program
      - Display Usage: when abort due to error input
      - Input dir
      - debug arg
